@@ -2,7 +2,6 @@
 .git*               export-ignore
 /phpstan.neon       export-ignore
 /phpcs.xml          export-ignore
-/.scrutinizer.yml   export-ignore
 /build.xml          export-ignore
 /RELEASE_NOTES      export-ignore
 .editorconfig       export-ignore
