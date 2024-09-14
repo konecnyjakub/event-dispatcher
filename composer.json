@@ -1,0 +1,40 @@
+{
+    "name": "konecnyjakub/event-dispatcher",
+    "description": "A simple PSR-14 event dispatcher",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "event dispatcher",
+        "event listener",
+        "events",
+        "simple",
+        "psr-14"
+    ],
+    "authors": [
+        {
+            "name": "Jakub Konečný",
+            "email": "jakub.konecny2@centrum.cz",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "sources": "https://gitlab.com/konecnyjakub/event-dispatcher",
+        "issues": "https://gitlab.com/konecnyjakub/event-dispatcher/-/issues"
+    },
+    "require": {
+        "php": ">=8.3.0",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "provide": {
+        "psr/event-dispatcher-implementation": "1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Konecnyjakub\\EventDispatcher\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Konecnyjakub\\EventDispatcher\\": "tests/"
+        }
+    }
+}
