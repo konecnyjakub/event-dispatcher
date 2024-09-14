@@ -1,0 +1,41 @@
+include:
+    -   template: Security/Dependency-Scanning.gitlab-ci.yml
+    -   template: SAST.gitlab-ci.yml
+    -   template: Secret-Detection.gitlab-ci.yml
+
+stages:
+    - test
+
+.job_template: &test_job
+    stage: test
+    script:
+        - phing test
+    cache:
+        paths:
+            - vendor/
+
+test:php8.3:
+    <<: *test_job
+    image: nexendrie/php:8.3
+
+test:reports:
+    <<: *test_job
+    image: nexendrie/php:8.3
+    variables:
+        REPORTS: 1
+    coverage: '/(\d+\%) covered/'
+    artifacts:
+        paths:
+            - coverage.xml
+            - junit.xml
+            - phpstan.json
+        reports:
+            coverage_report:
+                coverage_format: cobertura
+                path: coverage.xml
+            junit: junit.xml
+            codequality: phpstan.json
+
+sast:
+    variables:
+        SAST_DEFAULT_ANALYZERS: "phpcs-security-audit"
