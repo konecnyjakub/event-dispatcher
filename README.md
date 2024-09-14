@@ -9,3 +9,26 @@ Installation
 ------------
 
 The best way to install Event Dispatcher is via Composer. Just add konecnyjakub/event-dispatcher to your dependencies.
+
+Quick start
+-----------
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\ListenerProvider;
+
+class MyEvent {
+
+}
+
+$listenerProvider = new ListenerProvider();
+$listenerProvider->registerListener(new MyEvent(), function (MyEvent $event) {
+    echo "Event triggered\n";
+});
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+
+```
