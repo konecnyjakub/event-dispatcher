@@ -28,7 +28,7 @@ final class EventDispatcherTest extends TestCase
         $listenerProvider = new ListenerProvider();
         $listenerProvider->registerListener($event::class, function (TestStoppableEvent $event) use (&$var) {
             $var++;
-            $event->stopped = true;
+            $event->stopPropagation();
         });
         $listenerProvider->registerListener($event::class, function (TestStoppableEvent $event) use (&$var) {
             $var++;
@@ -36,6 +36,6 @@ final class EventDispatcherTest extends TestCase
         $eventDispatcher = new EventDispatcher($listenerProvider);
         $this->assertSame($event, $eventDispatcher->dispatch($event));
         $this->assertSame(1, $var);
-        $this->assertTrue($event->stopped);
+        $this->assertTrue($event->isPropagationStopped());
     }
 }
