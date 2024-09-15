@@ -35,6 +35,26 @@ $eventDispatcher->dispatch(new MyEvent());
 Advanced usage
 --------------
 
+### Registering multiple listeners at once
+
+It is possible to register multiple listeners at the same time in ListenerProvider, just pass an array/iterable of arrays into method registerListeners.
+
+```php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\ListenerProvider;
+
+class MyEvent {
+
+}
+
+$listenerProvider = new ListenerProvider();
+$listenerProvider->registerListeners(MyEvent::class, ["time", "pi", ]);
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+```
+
 ### Priority for listeners
 
 This library provides a listener provider that supports setting priority for listeners, listeners with higher priority are triggered before those with lower priority. Example:

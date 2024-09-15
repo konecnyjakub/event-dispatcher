@@ -20,5 +20,10 @@ final class ListenerProviderTest extends TestCase
         $listenerProvider->registerListener(Event::class, "time");
         $this->assertSame(["time", ], $listenerProvider->getListenersForEvent(new Event()));
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
+
+        $listenerProvider = new ListenerProvider();
+        $listenerProvider->registerListeners(Event::class, ["time", "pi", ]);
+        $this->assertSame(["time", "pi", ], $listenerProvider->getListenersForEvent(new Event()));
+        $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
     }
 }
