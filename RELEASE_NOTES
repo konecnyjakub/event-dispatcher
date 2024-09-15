@@ -1,3 +1,3 @@
-A new version of Event Dispatcher is out. It is possible to register multiple listeners at the same time in ListenerProvider with registerListeners.
+A new version of Event Dispatcher is out.
 
 For complete list of changes since previous version, see CHANGELOG.md.
