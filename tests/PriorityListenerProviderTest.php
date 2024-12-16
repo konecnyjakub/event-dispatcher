@@ -23,7 +23,7 @@ final class PriorityListenerProviderTest extends TestCase
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
 
         $listenerProvider = new PriorityListenerProvider();
-        $listenerProvider->registerListeners(Event::class, ["pi", "time", ], 0);
+        $listenerProvider->addListeners(Event::class, ["pi", "time", ], 0);
         $listenerProvider->registerListener(Event::class, "getdate", 1);
         $this->assertSame(["getdate", "pi", "time", ], $listenerProvider->getListenersForEvent(new Event()));
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));

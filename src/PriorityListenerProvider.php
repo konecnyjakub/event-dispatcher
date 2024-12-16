@@ -11,8 +11,17 @@ final class PriorityListenerProvider implements ListenerProviderInterface
 
     /**
      * @param class-string $className
+     * @deprecated Use {@see self::addListener()} instead
      */
     public function registerListener(string $className, callable $callback, int $priority = 0): void
+    {
+        $this->addListener(...func_get_args());
+    }
+
+    /**
+     * @param class-string $className
+     */
+    public function addListener(string $className, callable $callback, int $priority = 0): void
     {
         if (!array_key_exists($className, $this->listeners)) {
             $this->listeners[$className] = [];
@@ -27,11 +36,11 @@ final class PriorityListenerProvider implements ListenerProviderInterface
      * @param class-string $classname
      * @param callable[] $callbacks
      */
-    public function registerListeners(string $classname, iterable $callbacks, int $priority = 0): void
+    public function addListeners(string $classname, iterable $callbacks, int $priority = 0): void
     {
         foreach ($callbacks as $callback) {
             if (is_callable($callback)) {
-                $this->registerListener($classname, $callback, $priority);
+                $this->addListener($classname, $callback, $priority);
             }
         }
     }
@@ -42,7 +51,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
             foreach ($listeners as $listener) {
                 /** @var callable $callback */
                 $callback = [$eventSubscriber, $listener[0]];
-                $this->registerListener($className, $callback, $listener[1] ?? 0);
+                $this->addListener($className, $callback, $listener[1] ?? 0);
             }
         }
     }

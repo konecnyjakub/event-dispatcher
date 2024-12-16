@@ -71,8 +71,8 @@ class MyEvent {
 }
 
 $listenerProvider = new PriorityListenerProvider();
-$listenerProvider->registerListener(MyEvent::class, "time", 0);
-$listenerProvider->registerListener(MyEvent::class, "pi", 1);
+$listenerProvider->addListener(MyEvent::class, "time", 0);
+$listenerProvider->addListener(MyEvent::class, "pi", 1);
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
@@ -93,8 +93,8 @@ class MyEvent {
 }
 
 $listenerProvider = new PriorityListenerProvider();
-$listenerProvider->registerListeners(Event::class, ["pi", "time", ], 0);
-$listenerProvider->registerListener(Event::class, "getdate", 1);
+$listenerProvider->addListeners(Event::class, ["pi", "time", ], 0);
+$listenerProvider->addListener(Event::class, "getdate", 1);
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```

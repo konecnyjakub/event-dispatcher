@@ -22,7 +22,7 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function registerListener(string $className, callable $callback): void
     {
-        $this->listenerProvider->registerListener(...func_get_args());
+        $this->listenerProvider->addListener(...func_get_args());
     }
 
     /**
@@ -31,7 +31,7 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function registerListeners(string $classname, iterable $callbacks): void
     {
-        $this->listenerProvider->registerListeners(...func_get_args());
+        $this->listenerProvider->addListeners(...func_get_args());
     }
 
     public function addSubscriber(IEventSubscriber $eventSubscriber): void
