@@ -79,6 +79,26 @@ $eventDispatcher->dispatch(new MyEvent());
 
 In the example, function pi is called before function time.
 
+It also possible to register multiple listeners with the same priority at the same time, just use method registerListeners.
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
+
+class MyEvent {
+
+}
+
+$listenerProvider = new PriorityListenerProvider();
+$listenerProvider->registerListeners(Event::class, ["pi", "time", ], 0);
+$listenerProvider->registerListener(Event::class, "getdate", 1);
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+```
+
 ### Multiple listener providers
 
 If you need to use multiple listener providers at the same time, just use ChainListenerProvider.

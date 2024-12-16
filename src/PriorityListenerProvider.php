@@ -23,6 +23,19 @@ final class PriorityListenerProvider implements ListenerProviderInterface
         $this->listeners[$className][$priority][] = $callback;
     }
 
+    /**
+     * @param class-string $classname
+     * @param callable[] $callbacks
+     */
+    public function registerListeners(string $classname, iterable $callbacks, int $priority): void
+    {
+        foreach ($callbacks as $callback) {
+            if (is_callable($callback)) {
+                $this->registerListener($classname, $callback, $priority);
+            }
+        }
+    }
+
     public function getListenersForEvent(object $event): iterable
     {
         $result = [];
