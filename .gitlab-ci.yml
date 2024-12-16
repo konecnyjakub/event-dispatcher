@@ -19,9 +19,13 @@ test:php8.3:
     <<: *test_job
     image: nexendrie/php:8.3
 
+test:php8.4:
+    <<: *test_job
+    image: nexendrie/php:8.4
+
 test:reports:
     <<: *test_job
-    image: nexendrie/php:8.3
+    image: nexendrie/php:8.4
     variables:
         REPORTS: 1
     coverage: '/(\d+\%) covered/'
