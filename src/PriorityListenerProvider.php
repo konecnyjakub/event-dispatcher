@@ -12,7 +12,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
     /**
      * @param class-string $className
      */
-    public function registerListener(string $className, callable $callback, int $priority): void
+    public function registerListener(string $className, callable $callback, int $priority = 0): void
     {
         if (!array_key_exists($className, $this->listeners)) {
             $this->listeners[$className] = [];
@@ -27,7 +27,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
      * @param class-string $classname
      * @param callable[] $callbacks
      */
-    public function registerListeners(string $classname, iterable $callbacks, int $priority): void
+    public function registerListeners(string $classname, iterable $callbacks, int $priority = 0): void
     {
         foreach ($callbacks as $callback) {
             if (is_callable($callback)) {
