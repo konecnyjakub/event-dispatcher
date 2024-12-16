@@ -2,10 +2,11 @@
 <project name="EventDispatcher" basedir="." default="test">
     <target name="test">
         <exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
-            <arg value="install"/>
+            <arg value="update"/>
             <arg value="--prefer-dist"/>
             <arg value="--no-progress"/>
             <arg value="--no-interaction"/>
+            <env key="COMPOSER_ROOT_VERSION" value="1.999"/>
         </exec>
         <if>
             <not>
