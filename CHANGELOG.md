@@ -4,7 +4,7 @@ Version 1.2.0
 - added DebugEventDispatcher
 - added support for event subscribers
 - deprecated ListenerProvider
-- deprecated PriorityListenerProvider::registerListener in favor of new registerListener()
+- deprecated PriorityListenerProvider::registerListener in favor of new addListener()
 
 Version 1.1.0
 - allowed registering multiple listeners at the same time in ListenerProvider
