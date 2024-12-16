@@ -151,3 +151,11 @@ $listenerProvider->registerListener(MyEvent::class, "time");
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
+
+### Debugging dispatched events
+
+If you want to debug dispatched events, you can use included DebugEventDispatcher. Its constructor takes an event dispatcher (to which dispatching events is delegated) and a [PSR-3](https://www.php-fig.org/psr/psr-3/) logger which is used to log relevant info.
+
+Currently it only logs that an event was dispatched.
+
+For an example of usage, see tests of the class.
