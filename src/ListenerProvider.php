@@ -5,22 +5,24 @@ namespace Konecnyjakub\EventDispatcher;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+/**
+ * @deprecated Use {@see PriorityListenerProvider} instead
+ */
 final class ListenerProvider implements ListenerProviderInterface
 {
-    /**
-     * @var array<class-string, callable[]>
-     */
-    private array $listeners = [];
+    private PriorityListenerProvider $listenerProvider;
+
+    public function __construct()
+    {
+        $this->listenerProvider = new PriorityListenerProvider();
+    }
 
     /**
      * @param class-string $className
      */
     public function registerListener(string $className, callable $callback): void
     {
-        if (!array_key_exists($className, $this->listeners)) {
-            $this->listeners[$className] = [];
-        }
-        $this->listeners[$className][] = $callback;
+        $this->listenerProvider->registerListener(...func_get_args());
     }
 
     /**
@@ -29,11 +31,7 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function registerListeners(string $classname, iterable $callbacks): void
     {
-        foreach ($callbacks as $callback) {
-            if (is_callable($callback)) {
-                $this->registerListener($classname, $callback);
-            }
-        }
+        $this->listenerProvider->registerListeners(...func_get_args());
     }
 
     public function addSubscriber(IEventSubscriber $eventSubscriber): void
@@ -49,6 +47,6 @@ final class ListenerProvider implements ListenerProviderInterface
 
     public function getListenersForEvent(object $event): iterable
     {
-        return $this->listeners[$event::class] ?? [];
+        return $this->listenerProvider->getListenersForEvent(...func_get_args());
     }
 }

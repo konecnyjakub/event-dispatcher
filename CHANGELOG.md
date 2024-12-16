@@ -3,6 +3,7 @@ Version 1.2.0-dev
 - added default priority for listeners in PriorityListenerProvider
 - added DebugEventDispatcher
 - added support for event subscribers
+- deprecated ListenerProvider
 
 Version 1.1.0
 - allowed registering multiple listeners at the same time in ListenerProvider
