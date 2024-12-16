@@ -36,6 +36,17 @@ final class ListenerProvider implements ListenerProviderInterface
         }
     }
 
+    public function addSubscriber(IEventSubscriber $eventSubscriber): void
+    {
+        foreach ($eventSubscriber::getSubscribedEvents() as $className => $listeners) {
+            foreach ($listeners as $listener) {
+                /** @var callable $callback */
+                $callback = [$eventSubscriber, $listener[0]];
+                $this->registerListener($className, $callback);
+            }
+        }
+    }
+
     public function getListenersForEvent(object $event): iterable
     {
         return $this->listeners[$event::class] ?? [];

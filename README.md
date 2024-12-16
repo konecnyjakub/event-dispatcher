@@ -152,6 +152,52 @@ $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
+### Event subscribers
+
+An alternative way to register listeners, is to use event subscribers. An event subscriber is an object which names methods from the same class that listen to a named event. They have to implement the Konecnyjakub\EventDispatcher\IEventSubscriber interface and are added to ListenerProvider or PriorityListenerProvider via method addSubscriber.
+
+The method getSubscribedEvents has to return an array or a traversable object in which the key is a class name (the event's name) and the value is an array of listeners. Each listener is again an array where first value is name of a method of the same class and second value can be a priority for that listener (it is of course taken into account only by PriorityListenerProvider).
+
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
+
+class MyEvent {
+
+}
+
+$eventSubscriber = new class implements IEventSubscriber
+{
+    public function one(): void
+    {
+    }
+    
+    public function two(): void
+    {
+    }
+    
+    public static function getSubscribedEvents(): iterable
+    {
+        return [
+            Event::class => [
+                ["one", ], ["two", 1, ],
+            ]
+        ];
+    }
+};
+
+$listenerProvider = new PriorityListenerProvider();
+$listenerProvider->addSubscriber($eventSubscriber);
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+```
+
+In the example method two is called before method one.
+
 ### Debugging dispatched events
 
 If you want to debug dispatched events, you can use included DebugEventDispatcher. Its constructor takes an event dispatcher (to which dispatching events is delegated) and a [PSR-3](https://www.php-fig.org/psr/psr-3/) logger which is used to log relevant info.

@@ -36,6 +36,17 @@ final class PriorityListenerProvider implements ListenerProviderInterface
         }
     }
 
+    public function addSubscriber(IEventSubscriber $eventSubscriber): void
+    {
+        foreach ($eventSubscriber::getSubscribedEvents() as $className => $listeners) {
+            foreach ($listeners as $listener) {
+                /** @var callable $callback */
+                $callback = [$eventSubscriber, $listener[0]];
+                $this->registerListener($className, $callback, $listener[1] ?? 0);
+            }
+        }
+    }
+
     public function getListenersForEvent(object $event): iterable
     {
         $result = [];
