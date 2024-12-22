@@ -206,4 +206,6 @@ If you want to debug dispatched events, you can use included DebugEventDispatche
 
 Currently it only logs that an event was dispatched.
 
+It can also tell you if an event of a certain type of dispatched, just use method dispatched with a class name. You can also specify with second optional parameter how many times it should have been dispatched.
+
 For an example of usage, see tests of the class.
