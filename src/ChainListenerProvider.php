@@ -10,7 +10,15 @@ final class ChainListenerProvider implements ListenerProviderInterface
     /** @var ListenerProviderInterface[] */
     private array $providers = [];
 
+    /**
+     * @deprecated Use {@see self::addProvider()} instead
+     */
     public function registerProvider(ListenerProviderInterface $listenerProvider): void
+    {
+        $this->addProvider(...func_get_args());
+    }
+
+    public function addProvider(ListenerProviderInterface $listenerProvider): void
     {
         $this->providers[] = $listenerProvider;
     }

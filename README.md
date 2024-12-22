@@ -120,8 +120,8 @@ $provider1 = new PriorityListenerProvider();
 $provider1->addListener(MyEvent::class, "time");
 $provider2 = new PriorityListenerProvider();
 $provider2->addListener(MyEvent::class, "pi");
-$listenerProvider->registerProvider($provider1);
-$listenerProvider->registerProvider($provider2);
+$listenerProvider->addProvider($provider1);
+$listenerProvider->addProvider($provider2);
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
