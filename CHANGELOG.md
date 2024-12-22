@@ -1,4 +1,4 @@
-Version 1.3.0-dev
+Version 1.3.0
 - deprecated ChainListenerProvider::registerProvider in favor of new addProvider()
 - added constants PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW to PriorityListenerProvider
 - added method DebugEventDispatcher::dispatched
