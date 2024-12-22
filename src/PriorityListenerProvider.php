@@ -7,13 +7,17 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class PriorityListenerProvider implements ListenerProviderInterface
 {
+    public const int PRIORITY_HIGH = 100;
+    public const int PRIORITY_NORMAL = 0;
+    public const int PRIORITY_LOW = -100;
+
     private array $listeners = [];
 
     /**
      * @param class-string $className
      * @deprecated Use {@see self::addListener()} instead
      */
-    public function registerListener(string $className, callable $callback, int $priority = 0): void
+    public function registerListener(string $className, callable $callback, int $priority = self::PRIORITY_NORMAL): void
     {
         $this->addListener(...func_get_args());
     }
@@ -21,7 +25,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
     /**
      * @param class-string $className
      */
-    public function addListener(string $className, callable $callback, int $priority = 0): void
+    public function addListener(string $className, callable $callback, int $priority = self::PRIORITY_NORMAL): void
     {
         if (!array_key_exists($className, $this->listeners)) {
             $this->listeners[$className] = [];
@@ -36,7 +40,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
      * @param class-string $classname
      * @param callable[] $callbacks
      */
-    public function addListeners(string $classname, iterable $callbacks, int $priority = 0): void
+    public function addListeners(string $classname, iterable $callbacks, int $priority = self::PRIORITY_NORMAL): void
     {
         foreach ($callbacks as $callback) {
             if (is_callable($callback)) {
@@ -51,7 +55,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
             foreach ($listeners as $listener) {
                 /** @var callable $callback */
                 $callback = [$eventSubscriber, $listener[0]];
-                $this->addListener($className, $callback, $listener[1] ?? 0);
+                $this->addListener($className, $callback, $listener[1] ?? self::PRIORITY_NORMAL);
             }
         }
     }

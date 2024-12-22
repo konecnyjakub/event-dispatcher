@@ -99,6 +99,8 @@ $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
+The listener provider provides constants  PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW that can be used for parameter priority of methods addListener/addListeners.
+
 ### Multiple listener providers
 
 If you need to use multiple listener providers at the same time, just use ChainListenerProvider.

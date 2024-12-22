@@ -1,5 +1,6 @@
 Version 1.3.0-dev
 - deprecated ChainListenerProvider::registerProvider in favor of new addProvider()
+- added constants PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW to PriorityListenerProvider
 
 Version 1.2.0
 - allowed registering multiple listeners at the same time in PriorityListenerProvider
