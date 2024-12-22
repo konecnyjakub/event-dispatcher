@@ -18,14 +18,14 @@ Quick start
 declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\ListenerProvider;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
 
 }
 
-$listenerProvider = new ListenerProvider();
-$listenerProvider->registerListener(MyEvent::class, function (MyEvent $event) {
+$listenerProvider = new PriorityListenerProvider();
+$listenerProvider->addListener(MyEvent::class, function (MyEvent $event) {
     echo "Event triggered\n";
 });
 $eventDispatcher = new EventDispatcher($listenerProvider);
@@ -37,27 +37,27 @@ Advanced usage
 
 ### Registering multiple listeners at once
 
-It is possible to register multiple listeners at the same time in ListenerProvider, just pass an array/iterable of arrays into method registerListeners.
+It is possible to register multiple listeners at the same time in PriorityListenerProvider, just pass an array/iterable of arrays into method addListeners.
 
 ```php
 declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\ListenerProvider;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
 
 }
 
-$listenerProvider = new ListenerProvider();
-$listenerProvider->registerListeners(MyEvent::class, ["time", "pi", ]);
+$listenerProvider = new PriorityListenerProvider();
+$listenerProvider->addListeners(MyEvent::class, ["time", "pi", ]);
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
 ### Priority for listeners
 
-This library provides a listener provider that supports setting priority for listeners, listeners with higher priority are triggered before those with lower priority. Example:
+The default listener provider supports setting priority for listeners, listeners with higher priority are triggered before those with lower priority. Example:
 
 ```php
 <?php
@@ -79,7 +79,7 @@ $eventDispatcher->dispatch(new MyEvent());
 
 In the example, function pi is called before function time.
 
-It also possible to register multiple listeners with the same priority at the same time, just use method registerListeners.
+It also possible to register multiple listeners with the same priority at the same time, just use method addListeners.
 
 ```php
 <?php
@@ -109,17 +109,17 @@ declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\ChainListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\ListenerProvider;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
 
 }
 
 $listenerProvider = new ChainListenerProvider();
-$provider1 = new ListenerProvider();
-$provider1->registerListener(MyEvent::class, "time");
-$provider2 = new ListenerProvider();
-$provider2->registerListener(MyEvent::class, "pi");
+$provider1 = new PriorityListenerProvider();
+$provider1->addListener(MyEvent::class, "time");
+$provider2 = new PriorityListenerProvider();
+$provider2->addListener(MyEvent::class, "pi");
 $listenerProvider->registerProvider($provider1);
 $listenerProvider->registerProvider($provider2);
 $eventDispatcher = new EventDispatcher($listenerProvider);
@@ -135,19 +135,19 @@ The provided event dispatcher supports stoppable events (as defined in psr). We 
 declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\ListenerProvider;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 use Konecnyjakub\EventDispatcher\TStoppableEvent;
 
 class MyEvent {
     use TStoppableEvent;
 }
 
-$listenerProvider = new ListenerProvider();
-$listenerProvider->registerListener(MyEvent::class, function (MyEvent $event) {
+$listenerProvider = new PriorityListenerProvider();
+$listenerProvider->addListener(MyEvent::class, function (MyEvent $event) {
     echo "Event triggered\n";
     $event->stopPropagation();
 });
-$listenerProvider->registerListener(MyEvent::class, "time");
+$listenerProvider->addListener(MyEvent::class, "time");
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
