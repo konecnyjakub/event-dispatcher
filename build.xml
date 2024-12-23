@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="EventDispatcher" basedir="." default="test">
+<project name="Event Dispatcher" basedir="." default="test">
     <target name="test">
         <exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
             <arg value="update"/>
