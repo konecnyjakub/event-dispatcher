@@ -15,7 +15,7 @@ final class ChainListenerProvider implements ListenerProviderInterface
      */
     public function registerProvider(ListenerProviderInterface $listenerProvider): void
     {
-        $this->addProvider(...func_get_args());
+        $this->addProvider(...func_get_args()); // @phpstan-ignore argument.type
     }
 
     public function addProvider(ListenerProviderInterface $listenerProvider): void

@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 
 final class DebugEventDispatcher implements EventDispatcherInterface
 {
+    /** @var array<class-string, int> */
     private array $dispatchedEvents = [];
 
     public function __construct(

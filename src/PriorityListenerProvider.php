@@ -11,6 +11,9 @@ final class PriorityListenerProvider implements ListenerProviderInterface
     public const int PRIORITY_NORMAL = 0;
     public const int PRIORITY_LOW = -100;
 
+    /**
+     * @var array<class-string, array<int, callable[]>>
+     */
     private array $listeners = [];
 
     /**
@@ -19,7 +22,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
      */
     public function registerListener(string $className, callable $callback, int $priority = self::PRIORITY_NORMAL): void
     {
-        $this->addListener(...func_get_args());
+        $this->addListener(...func_get_args()); // @phpstan-ignore argument.type
     }
 
     /**

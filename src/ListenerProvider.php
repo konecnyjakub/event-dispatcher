@@ -22,7 +22,7 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function registerListener(string $className, callable $callback): void
     {
-        $this->listenerProvider->addListener(...func_get_args());
+        $this->listenerProvider->addListener(...func_get_args()); // @phpstan-ignore argument.type
     }
 
     /**
@@ -31,7 +31,7 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function registerListeners(string $classname, iterable $callbacks): void
     {
-        $this->listenerProvider->addListeners(...func_get_args());
+        $this->listenerProvider->addListeners(...func_get_args()); // @phpstan-ignore argument.type
     }
 
     public function addSubscriber(IEventSubscriber $eventSubscriber): void
@@ -47,6 +47,6 @@ final class ListenerProvider implements ListenerProviderInterface
 
     public function getListenersForEvent(object $event): iterable
     {
-        return $this->listenerProvider->getListenersForEvent(...func_get_args());
+        return $this->listenerProvider->getListenersForEvent(...func_get_args()); // @phpstan-ignore argument.type
     }
 }
