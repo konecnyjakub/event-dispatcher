@@ -208,4 +208,41 @@ Currently it only logs that an event was dispatched.
 
 It can also tell you if an event of a certain type of dispatched, just use method dispatched with a class name. You can also specify with second optional parameter how many times it should have been dispatched.
 
-For an example of usage, see tests of the class.
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\DebugEventDispatcher;
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
+use Psr\Log\NullLogger;
+
+class MyEvent {
+
+}
+
+$listenerProvider = new PriorityListenerProvider();
+$listenerProvider->addListeners(MyEvent::class, ["time", "pi", ]);
+$logger = new class extends AbstractLogger
+{
+    public array $records = [];
+
+    public function log($level, \Stringable|string $message, array $context = []): void
+    {
+        $this->records[] = [
+            "message" => $message,
+            "type" => $context["type"],
+            "event" => $context["event"],
+        ];
+    }
+};
+$eventDispatcher = new DebugEventDispatcher(new EventDispatcher($listenerProvider), $logger);
+$eventDispatcher->dispatched(MyEvent::class); // false
+count($logger->records); // 0
+
+$eventDispatcher->dispatch(new MyEvent());
+$eventDispatcher->dispatched(MyEvent::class); // true
+$eventDispatcher->dispatched(MyEvent::class, 1); // true
+$eventDispatcher->dispatched(MyEvent::class, 2); // false
+count($logger->records); // 1
+```
