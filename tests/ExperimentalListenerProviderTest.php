@@ -56,11 +56,16 @@ final class ExperimentalListenerProviderTest extends TestCase
             {
             }
 
+            #[Listener(priority: 2)]
+            public function three(Event $event): void
+            {
+            }
+
             public static function getSubscribedEvents(): iterable
             {
                 return [
                     Event::class => [
-                        ["one", ], ["two", 1, ],
+                        ["one", ], ["two", 1, ], ["three", ],
                     ]
                 ];
             }
@@ -68,7 +73,7 @@ final class ExperimentalListenerProviderTest extends TestCase
         $listenerProvider = new ExperimentalListenerProvider();
         $listenerProvider->addSubscriber($eventSubscriber);
         $this->assertSame(
-            [[$eventSubscriber, "two"], [$eventSubscriber, "one"], ],
+            [[$eventSubscriber, "three"], [$eventSubscriber, "two"], [$eventSubscriber, "one"], ],
             iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));

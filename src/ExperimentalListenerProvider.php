@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
+use ReflectionException;
 
 /**
  * @internal
@@ -35,33 +36,26 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws InvalidListenerException If the callback is not a valid event listener
      */
     public function addListener(callable $callback): void
     {
         $this->listenerValidator->validate($callback);
 
-        $priority = self::PRIORITY_NORMAL;
-        $attributes = $this->listenerValidator->getListenerMetadataReflection($callback)
-            ->getAttributes(Listener::class);
-        if (count($attributes) === 1) {
-            /** @var Listener $attribute */
-            $attribute = $attributes[0]->newInstance();
-            $priority = $attribute->priority;
-        }
+        $metadata = $this->getListenerMetadata($callback);
 
         /** @var class-string $classname */
         $classname = (string) $this->listenerValidator->getListenerReflection($callback)
             ->getParameters()[0]
             ->getType();
 
-        $this->addListenerInternal($classname, $callback, $priority);
+        $this->addListenerInternal($classname, $callback, $metadata->priority);
     }
 
     /**
      * @param callable[] $callbacks
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws InvalidListenerException If the callback is not a valid event listener
      */
     public function addListeners(iterable $callbacks): void
@@ -80,7 +74,8 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
                 /** @var callable $callback */
                 $callback = [$eventSubscriber, $listener[0]];
                 $this->listenerValidator->validate($callback, $className);
-                $this->addListenerInternal($className, $callback, $listener[1] ?? self::PRIORITY_NORMAL);
+                $metadata = $this->getListenerMetadata($callback);
+                $this->addListenerInternal($className, $callback, $listener[1] ?? $metadata->priority);
             }
         }
     }
@@ -97,5 +92,20 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
             $this->listeners[$className][$priority] = [];
         }
         $this->listeners[$className][$priority][] = $callback;
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    private function getListenerMetadata(callable $callback): Listener
+    {
+        $attributes = $this->listenerValidator->getListenerMetadataReflection($callback)
+            ->getAttributes(Listener::class);
+        if (count($attributes) === 1) {
+            /** @var Listener $attribute */
+            $attribute = $attributes[0]->newInstance();
+            return $attribute;
+        }
+        return new Listener();
     }
 }

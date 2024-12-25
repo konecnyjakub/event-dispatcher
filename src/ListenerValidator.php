@@ -5,6 +5,7 @@ namespace Konecnyjakub\EventDispatcher;
 
 use Closure;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
@@ -16,7 +17,7 @@ use ReflectionNamedType;
 final class ListenerValidator
 {
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getListenerReflection(callable $callback): ReflectionFunctionAbstract
     {
@@ -35,7 +36,7 @@ final class ListenerValidator
      * @template T of object
      * @param callable|(T&callable) $callback
      * @return ($callback is object ? ReflectionClass<T> : ReflectionFunctionAbstract)
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getListenerMetadataReflection(callable $callback): ReflectionFunctionAbstract|ReflectionClass
     {
@@ -48,7 +49,7 @@ final class ListenerValidator
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws InvalidListenerException If the callback is not a valid event listener
      */
     public function validate(callable $callback, ?string $eventName = null): void
