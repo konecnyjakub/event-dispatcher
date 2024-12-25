@@ -51,7 +51,7 @@ final class ListenerValidator
      * @throws \ReflectionException
      * @throws InvalidListenerException If the callback is not a valid event listener
      */
-    public function validate(callable $callback): void
+    public function validate(callable $callback, ?string $eventName = null): void
     {
         $reflection = $this->getListenerReflection($callback);
         if ($reflection->getNumberOfParameters() !== 1) {
@@ -59,6 +59,9 @@ final class ListenerValidator
         }
         if (!class_exists((string) $reflection->getParameters()[0]->getType())) {
             throw new InvalidListenerException("The callback's first parameter has to be a class name");
+        }
+        if ($eventName !== null && (string) $reflection->getParameters()[0]->getType() !== $eventName) {
+            throw new InvalidListenerException("The callback's first parameter has to be $eventName");
         }
         if (
             !$reflection->getReturnType() instanceof ReflectionNamedType ||

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Konecnyjakub\EventDispatcher\Events\Event;
+use Konecnyjakub\EventDispatcher\Events\TestStoppableEvent;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
 use ReflectionClass;
@@ -60,6 +61,11 @@ final class ListenerValidatorTest extends TestCase
             $validator->validate($closure);
         });
         $this->assertNoException(function () use ($validator) {
+            $closure = function (Event $event): void {
+            };
+            $validator->validate($closure, Event::class);
+        });
+        $this->assertNoException(function () use ($validator) {
             $invokableListener = new InvokableListener();
             $validator->validate($invokableListener);
         });
@@ -77,11 +83,14 @@ final class ListenerValidatorTest extends TestCase
             $validator->validate(function (Event $event, int $number) {
             });
         }, InvalidListenerException::class, "The callback has to accept exactly 1 parameter");
-
         $this->assertThrowsException(function () use ($validator) {
             $validator->validate(function (int $number) {
             });
         }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
+        $this->assertThrowsException(function () use ($validator) {
+            $validator->validate(function (TestStoppableEvent $event) {
+            }, Event::class);
+        }, InvalidListenerException::class, "The callback's first parameter has to be " . Event::class);
         $this->assertThrowsException(function () use ($validator) {
             $validator->validate(function (Event $event) {
             });

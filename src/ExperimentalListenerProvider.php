@@ -79,6 +79,7 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
             foreach ($listeners as $listener) {
                 /** @var callable $callback */
                 $callback = [$eventSubscriber, $listener[0]];
+                $this->listenerValidator->validate($callback, $className);
                 $this->addListenerInternal($className, $callback, $listener[1] ?? self::PRIORITY_NORMAL);
             }
         }

@@ -48,11 +48,11 @@ final class ExperimentalListenerProviderTest extends TestCase
 
         $eventSubscriber = new class implements IEventSubscriber
         {
-            public function one(): void
+            public function one(Event $event): void
             {
             }
 
-            public function two(): void
+            public function two(Event $event): void
             {
             }
 
