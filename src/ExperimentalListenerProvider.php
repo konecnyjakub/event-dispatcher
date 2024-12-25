@@ -67,6 +67,10 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
         }
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws InvalidListenerException If the callback is not a valid event listener
+     */
     public function addSubscriber(IEventSubscriber $eventSubscriber): void
     {
         foreach ($eventSubscriber::getSubscribedEvents() as $className => $listeners) {
