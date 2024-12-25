@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
-use DomainException;
 use Konecnyjakub\EventDispatcher\Events\Event;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
@@ -81,12 +80,12 @@ final class ExperimentalListenerProviderTest extends TestCase
             $listenerProvider = new ExperimentalListenerProvider();
             $listenerProvider->addListener(function (Event $event, int $number) {
             });
-        }, DomainException::class, "The callback has to accept exactly 1 parameter");
+        }, InvalidListenerException::class, "The callback has to accept exactly 1 parameter");
 
         $this->assertThrowsException(function () {
             $listenerProvider = new ExperimentalListenerProvider();
             $listenerProvider->addListener(function (int $number) {
             });
-        }, DomainException::class, "The callback's first parameter has to be a class name");
+        }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
     }
 }

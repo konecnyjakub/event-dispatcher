@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
-use DomainException;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
@@ -37,7 +36,7 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
 
     /**
      * @throws \ReflectionException
-     * @throws DomainException If the callback is not a valid event listener
+     * @throws InvalidListenerException If the callback is not a valid event listener
      */
     public function addListener(callable $callback): void
     {
@@ -63,7 +62,7 @@ final class ExperimentalListenerProvider implements ListenerProviderInterface
     /**
      * @param callable[] $callbacks
      * @throws \ReflectionException
-     * @throws DomainException If the callback is not a valid event listener
+     * @throws InvalidListenerException If the callback is not a valid event listener
      */
     public function addListeners(iterable $callbacks): void
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Closure;
-use DomainException;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
@@ -49,16 +48,16 @@ final class ListenerValidator
 
     /**
      * @throws \ReflectionException
-     * @throws DomainException If the callback is not a valid event listener
+     * @throws InvalidListenerException If the callback is not a valid event listener
      */
     public function validate(callable $callback): void
     {
         $reflection = $this->getListenerReflection($callback);
         if ($reflection->getNumberOfParameters() !== 1) {
-            throw new DomainException("The callback has to accept exactly 1 parameter");
+            throw new InvalidListenerException("The callback has to accept exactly 1 parameter");
         }
         if (!class_exists((string) $reflection->getParameters()[0]->getType())) {
-            throw new DomainException("The callback's first parameter has to be a class name");
+            throw new InvalidListenerException("The callback's first parameter has to be a class name");
         }
     }
 }
