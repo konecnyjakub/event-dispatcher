@@ -26,29 +26,11 @@ final class ListenerProviderTest extends TestCase
         $this->assertSame(["time", "pi", ], $listenerProvider->getListenersForEvent(new Event()));
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
 
-        $eventSubscriber = new class implements IEventSubscriber
-        {
-            public function one(): void
-            {
-            }
-
-            public function two(): void
-            {
-            }
-
-            public static function getSubscribedEvents(): iterable
-            {
-                return [
-                    Event::class => [
-                        ["one", ], ["two", 1, ],
-                    ]
-                ];
-            }
-        };
+        $eventSubscriber = new TestEventSubscriber();
         $listenerProvider = new ListenerProvider();
         $listenerProvider->addSubscriber($eventSubscriber);
         $this->assertSame(
-            [[$eventSubscriber, "one"], [$eventSubscriber, "two"], ],
+            [[$eventSubscriber, "one"], [$eventSubscriber, "two"], [$eventSubscriber, "three"], ],
             $listenerProvider->getListenersForEvent(new Event())
         );
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));

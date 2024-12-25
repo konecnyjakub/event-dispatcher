@@ -46,30 +46,7 @@ final class ExperimentalListenerProviderTest extends TestCase
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
-        $eventSubscriber = new class implements IEventSubscriber
-        {
-            public function one(Event $event): void
-            {
-            }
-
-            public function two(Event $event): void
-            {
-            }
-
-            #[Listener(priority: 2)]
-            public function three(Event $event): void
-            {
-            }
-
-            public static function getSubscribedEvents(): iterable
-            {
-                return [
-                    Event::class => [
-                        ["one", ], ["two", 1, ], ["three", ],
-                    ]
-                ];
-            }
-        };
+        $eventSubscriber = new TestEventSubscriber();
         $listenerProvider = new ExperimentalListenerProvider();
         $listenerProvider->addSubscriber($eventSubscriber);
         $this->assertSame(
