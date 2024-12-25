@@ -3,7 +3,7 @@ Event Dispatcher
 
 [![Total Downloads](https://poser.pugx.org/konecnyjakub/event-dispatcher/downloads)](https://packagist.org/packages/konecnyjakub/event-dispatcher) [![Latest Stable Version](https://poser.pugx.org/konecnyjakub/event-dispatcher/v/stable)](https://gitlab.com/konecnyjakub/event-dispatcher/-/releases) [![build status](https://gitlab.com/konecnyjakub/event-dispatcher/badges/master/pipeline.svg?ignore_skipped=true)](https://gitlab.com/konecnyjakub/event-dispatcher/-/commits/master) [![coverage report](https://gitlab.com/konecnyjakub/event-dispatcher/badges/master/coverage.svg)](https://gitlab.com/konecnyjakub/event-dispatcher/-/commits/master) [![License](https://poser.pugx.org/konecnyjakub/event-dispatcher/license)](https://gitlab.com/konecnyjakub/event-dispatcher/-/blob/master/LICENSE.md)
 
-This is a simple [PSR-14](https://www.php-fig.org/psr/psr-14/) event dispatcher, it allows registering callbacks as event listeners. It also supports stoppable events from psr and has listener providers that allow setting priority for listeners or using multiple listener providers at the same time.
+This is a simple [PSR-14](https://www.php-fig.org/psr/psr-14/) event dispatcher, it allows registering callbacks as event listeners. It also supports stoppable events from psr and allows setting priority for listeners, using event subscribers or using multiple listener providers at the same time.
 
 Installation
 ------------
@@ -40,6 +40,7 @@ Advanced usage
 It is possible to register multiple listeners at the same time in PriorityListenerProvider, just pass an array/iterable of arrays into method addListeners.
 
 ```php
+<?php
 declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\EventDispatcher;
