@@ -55,7 +55,7 @@ final class ListenerValidatorTest extends TestCase
     {
         $validator = new ListenerValidator();
         $this->assertNoException(function () use ($validator) {
-            $closure = function (Event $event) {
+            $closure = function (Event $event): void {
             };
             $validator->validate($closure);
         });
@@ -82,5 +82,14 @@ final class ListenerValidatorTest extends TestCase
             $validator->validate(function (int $number) {
             });
         }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
+        $this->assertThrowsException(function () use ($validator) {
+            $validator->validate(function (Event $event) {
+            });
+        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
+        $this->assertThrowsException(function () use ($validator) {
+            $validator->validate(function (Event $event): null {
+                return null;
+            });
+        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
     }
 }

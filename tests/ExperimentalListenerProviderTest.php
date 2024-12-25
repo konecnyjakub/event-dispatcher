@@ -16,7 +16,7 @@ final class ExperimentalListenerProviderTest extends TestCase
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new Event())));
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
-        $closure = function (Event $event) {
+        $closure = function (Event $event): void {
         };
         $invokableListener = new InvokableListener();
         $object = new class
@@ -87,5 +87,16 @@ final class ExperimentalListenerProviderTest extends TestCase
             $listenerProvider->addListener(function (int $number) {
             });
         }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
+        $this->assertThrowsException(function () {
+            $listenerProvider = new ExperimentalListenerProvider();
+            $listenerProvider->addListener(function (Event $event) {
+            });
+        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
+        $this->assertThrowsException(function () {
+            $listenerProvider = new ExperimentalListenerProvider();
+            $listenerProvider->addListener(function (Event $event): null {
+                return null;
+            });
+        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
     }
 }

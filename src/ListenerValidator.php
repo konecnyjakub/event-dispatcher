@@ -8,6 +8,7 @@ use ReflectionClass;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 /**
  * @internal
@@ -58,6 +59,12 @@ final class ListenerValidator
         }
         if (!class_exists((string) $reflection->getParameters()[0]->getType())) {
             throw new InvalidListenerException("The callback's first parameter has to be a class name");
+        }
+        if (
+            !$reflection->getReturnType() instanceof ReflectionNamedType ||
+            $reflection->getReturnType()->getName() !== "void"
+        ) {
+            throw new InvalidListenerException("The callback's return type has to explicitly set to void");
         }
     }
 }
