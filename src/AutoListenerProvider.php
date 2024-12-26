@@ -6,10 +6,7 @@ namespace Konecnyjakub\EventDispatcher;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use ReflectionException;
 
-/**
- * @internal
- */
-final class ExperimentalListenerProvider implements ListenerProviderInterface
+final class AutoListenerProvider implements ListenerProviderInterface
 {
     public const int PRIORITY_HIGH = 100;
     public const int PRIORITY_NORMAL = 0;

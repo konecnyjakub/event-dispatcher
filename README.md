@@ -167,6 +167,7 @@ The method getSubscribedEvents has to return an array or a traversable object in
 declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\IEventSubscriber;
 use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
@@ -200,6 +201,99 @@ $eventDispatcher->dispatch(new MyEvent());
 ```
 
 In the example method two is called before method one.
+
+### Easier registration of listeners
+
+There is an experimental listener provider, AutoListenerProvider that makes registration of event listeners even easier. It has the same methods as PriorityListenerProvider (addListener, addListeners and addSubscriber) but you only have to pass the listener itself to methods addListener and addListeners, everything else (type of event it listens to and priority) is determined from the callback itself (its signature or a used attribute). That obviously requires the callback to have properly type hinted the parameter (and have void return type hinted as recommended by the psr). Other metadata (at the moment only priority) can be specified by attribute Konecnyjakub\EventDispatcher\Listener. Event subscribers are defined the same way as with PriorityListenerProvider but if priority is not specified in the result of method getSubscribedEvents, it is taken from the above mentioned attribute if present. Examples:
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\Listener;
+
+class MyEvent {
+
+}
+
+#[Listener(priority: 1)]
+final class InvokableListener
+{
+    public function __invoke(Event $event): void
+    {
+    }
+}
+
+$closure = function (Event $event): void {
+};
+$invokableListener = new InvokableListener();
+$object = new class
+{
+    #[Listener(priority: AutoListenerProvider::PRIORITY_HIGH)]
+    public function listener(Event $event): void
+    {
+    }
+};
+$arrayListener = [$object, "listener", ];
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListener($closure);
+$listenerProvider->addListener($invokableListener);
+$listenerProvider->addListener($arrayListener);
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+```
+
+In this example, $arrayListener is called first, $invokableListener second and $closure last.
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\IEventSubscriber;
+use Konecnyjakub\EventDispatcher\Listener;
+
+class MyEvent {
+
+}
+
+final class EventSubscriber implements IEventSubscriber
+{
+    public function one(Event $event): void
+    {
+    }
+
+    public function two(Event $event): void
+    {
+    }
+
+    #[Listener(priority: 2)]
+    public function three(Event $event): void
+    {
+    }
+
+    public static function getSubscribedEvents(): iterable
+    {
+        return [
+            Event::class => [
+                ["one", ], ["two", 1, ], ["three", ],
+            ]
+        ];
+    }
+}
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addSubscriber(new EventSubscriber());
+$eventDispatcher->dispatch(new MyEvent());
+```
+
+In this example, method three is called first, method two second and method one last.
+
+This listener provider is likely to replace PriorityListenerProvider in the future, either by moving its functionality into PriorityListenerProvider or by PriorityListenerProvider being removed.
 
 ### Debugging dispatched events
 

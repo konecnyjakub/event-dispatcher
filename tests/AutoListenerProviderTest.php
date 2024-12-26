@@ -7,12 +7,12 @@ use Konecnyjakub\EventDispatcher\Events\Event;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
 
-#[TestSuite("ExperimentalListenerProvider")]
-final class ExperimentalListenerProviderTest extends TestCase
+#[TestSuite("AutoListenerProvider")]
+final class AutoListenerProviderTest extends TestCase
 {
     public function testGetListenersForEvent(): void
     {
-        $listenerProvider = new ExperimentalListenerProvider();
+        $listenerProvider = new AutoListenerProvider();
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new Event())));
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
@@ -21,14 +21,14 @@ final class ExperimentalListenerProviderTest extends TestCase
         $invokableListener = new InvokableListener();
         $object = new class
         {
-            #[Listener(priority: ExperimentalListenerProvider::PRIORITY_HIGH)]
+            #[Listener(priority: AutoListenerProvider::PRIORITY_HIGH)]
             public function listener(Event $event): void
             {
             }
         };
         $arrayListener = [$object, "listener", ];
 
-        $listenerProvider = new ExperimentalListenerProvider();
+        $listenerProvider = new AutoListenerProvider();
         $listenerProvider->addListener($closure);
         $listenerProvider->addListener($invokableListener);
         $this->assertSame(
@@ -37,7 +37,7 @@ final class ExperimentalListenerProviderTest extends TestCase
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
-        $listenerProvider = new ExperimentalListenerProvider();
+        $listenerProvider = new AutoListenerProvider();
         $listenerProvider->addListeners([$closure, $invokableListener, ]);
         $listenerProvider->addListener($arrayListener);
         $this->assertSame(
@@ -47,7 +47,7 @@ final class ExperimentalListenerProviderTest extends TestCase
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
         $eventSubscriber = new TestEventSubscriber();
-        $listenerProvider = new ExperimentalListenerProvider();
+        $listenerProvider = new AutoListenerProvider();
         $listenerProvider->addSubscriber($eventSubscriber);
         $this->assertSame(
             [[$eventSubscriber, "three"], [$eventSubscriber, "two"], [$eventSubscriber, "one"], ],
@@ -59,23 +59,23 @@ final class ExperimentalListenerProviderTest extends TestCase
     public function testInvalidCallbacks(): void
     {
         $this->assertThrowsException(function () {
-            $listenerProvider = new ExperimentalListenerProvider();
+            $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addListener(function (Event $event, int $number) {
             });
         }, InvalidListenerException::class, "The callback has to accept exactly 1 parameter");
 
         $this->assertThrowsException(function () {
-            $listenerProvider = new ExperimentalListenerProvider();
+            $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addListener(function (int $number) {
             });
         }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
         $this->assertThrowsException(function () {
-            $listenerProvider = new ExperimentalListenerProvider();
+            $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addListener(function (Event $event) {
             });
         }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
         $this->assertThrowsException(function () {
-            $listenerProvider = new ExperimentalListenerProvider();
+            $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addListener(function (Event $event): null {
                 return null;
             });

@@ -11,9 +11,6 @@ use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use ReflectionNamedType;
 
-/**
- * @internal
- */
 final class ListenerValidator
 {
     /**

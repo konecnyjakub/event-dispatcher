@@ -5,9 +5,6 @@ namespace Konecnyjakub\EventDispatcher;
 
 use DomainException;
 
-/**
- * @internal
- */
 class InvalidListenerException extends DomainException
 {
 }
