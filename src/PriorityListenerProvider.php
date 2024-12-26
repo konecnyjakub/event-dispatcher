@@ -65,14 +65,12 @@ final class PriorityListenerProvider implements ListenerProviderInterface
 
     public function getListenersForEvent(object $event): iterable
     {
-        $result = [];
         $listeners = $this->listeners[$event::class] ?? [];
         krsort($listeners);
         foreach ($listeners as $priority) {
             foreach ($priority as $callback) {
-                $result[] = $callback;
+                yield $callback;
             }
         }
-        return $result;
     }
 }

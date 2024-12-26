@@ -13,26 +13,26 @@ final class ListenerProviderTest extends TestCase
     public function testGetListenersForEvent(): void
     {
         $listenerProvider = new ListenerProvider();
-        $this->assertSame([], $listenerProvider->getListenersForEvent(new Event()));
-        $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new Event())));
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
         $listenerProvider = new ListenerProvider();
         $listenerProvider->registerListener(Event::class, "time");
-        $this->assertSame(["time", ], $listenerProvider->getListenersForEvent(new Event()));
-        $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
+        $this->assertSame(["time", ], iterator_to_array($listenerProvider->getListenersForEvent(new Event())));
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
         $listenerProvider = new ListenerProvider();
         $listenerProvider->registerListeners(Event::class, ["time", "pi", ]);
-        $this->assertSame(["time", "pi", ], $listenerProvider->getListenersForEvent(new Event()));
-        $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
+        $this->assertSame(["time", "pi", ], iterator_to_array($listenerProvider->getListenersForEvent(new Event())));
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
         $eventSubscriber = new TestEventSubscriber();
         $listenerProvider = new ListenerProvider();
         $listenerProvider->addSubscriber($eventSubscriber);
         $this->assertSame(
             [[$eventSubscriber, "one"], [$eventSubscriber, "two"], [$eventSubscriber, "three"], ],
-            $listenerProvider->getListenersForEvent(new Event())
+            iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
         );
-        $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
     }
 }
