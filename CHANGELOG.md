@@ -1,4 +1,4 @@
-Version 1.4.0-dev
+Version 1.4.0
 - possible BC break: PriorityListenerProvider/ListenerProvider::getListenersForEvent() now returns a Generator instead of array
 - added AutoListenerProvider
 
