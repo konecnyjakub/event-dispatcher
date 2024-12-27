@@ -37,6 +37,16 @@ AutoListenerProvider is a smart listener provider, its method addListener (and o
 Advanced usage
 --------------
 
+### What can be registered as listener
+
+Anything that is a callable. You can pass an anonymous function, a function name as string, an object with the __invoke method, an array with an object at index 0 and a method name at index 1, static class method as string. See PHP documentation on [callables](https://www.php.net/manual/en/language.types.callable.php), if it is described on that page, it can used as listener.
+
+### Metadata for listeners
+
+When registering a listener, AutoListenerProvider automatically looks for its metadata. You can metadata to a listener via attribute Konecnyjakub\EventDispatcher\Listener.
+
+Currently only one feature is implemented via metadata: priority. It is described in detail later in this document.
+
 ### Registering multiple listeners at once
 
 It is possible to register multiple listeners at the same time in AutoListenerProvider, just pass an array/iterable of arrays into method addListeners.
