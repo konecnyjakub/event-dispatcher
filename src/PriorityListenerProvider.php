@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
+use Deprecated;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class PriorityListenerProvider implements ListenerProviderInterface
@@ -20,6 +21,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
      * @param class-string $className
      * @deprecated Use {@see self::addListener()} instead
      */
+    #[Deprecated("use method addListener instead", "1.2")]
     public function registerListener(string $className, callable $callback, int $priority = self::PRIORITY_NORMAL): void
     {
         $this->addListener(...func_get_args()); // @phpstan-ignore argument.type

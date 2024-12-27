@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
+use Deprecated;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class ChainListenerProvider implements ListenerProviderInterface
@@ -13,6 +14,7 @@ final class ChainListenerProvider implements ListenerProviderInterface
     /**
      * @deprecated Use {@see self::addProvider()} instead
      */
+    #[Deprecated("use method addProvider instead", "1.3")]
     public function registerProvider(ListenerProviderInterface $listenerProvider): void
     {
         $this->addProvider(...func_get_args()); // @phpstan-ignore argument.type

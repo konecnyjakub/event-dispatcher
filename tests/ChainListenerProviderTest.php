@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Konecnyjakub\EventDispatcher\Events\Event;
+use MyTester\Attributes\IgnoreDeprecations;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
-use Psr\EventDispatcher\ListenerProviderInterface;
 
 #[TestSuite("ChainListenerProvider")]
 final class ChainListenerProviderTest extends TestCase
 {
+    #[IgnoreDeprecations]
     public function testGetListenersForEvent(): void
     {
         $listenerProvider = new ChainListenerProvider();

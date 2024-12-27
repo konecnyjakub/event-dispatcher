@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Konecnyjakub\EventDispatcher\Events\Event;
+use MyTester\Attributes\IgnoreDeprecations;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
 
 #[TestSuite("PriorityListenerProvider")]
+#[IgnoreDeprecations]
 final class PriorityListenerProviderTest extends TestCase
 {
     public function testGetListenersForEvent(): void
