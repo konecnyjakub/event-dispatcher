@@ -1,4 +1,4 @@
-Version 1.5.0-dev
+Version 1.5.0
 - deprecated PriorityListenerProvider in favor of AutoListenerProvider
 
 Version 1.4.0
