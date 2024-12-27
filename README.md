@@ -73,7 +73,7 @@ $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
-Another way to register multiple event listeners together is to pass an object to method addListenersFromClass. That automatically adds all public methods on the object with attribute Konecnyjakub\EventDispatcher\Listener as listeners. Example:
+It is also possible to pass an object to method addListeners. That automatically adds all public methods on the object with attribute Konecnyjakub\EventDispatcher\Listener as listeners. Example:
 
 ```php
 declare(strict_types=1);
@@ -102,7 +102,7 @@ $object = new class {
 }
 
 $listenerProvider = new AutoListenerProvider();
-$listenerProvider->addListenersFromClass($object);
+$listenerProvider->addListeners($object);
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```

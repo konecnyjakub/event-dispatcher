@@ -56,7 +56,7 @@ final class AutoListenerProviderTest extends TestCase
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
         $listenerProvider = new AutoListenerProvider();
-        $listenerProvider->addListenersFromClass($eventSubscriber);
+        $listenerProvider->addListeners($eventSubscriber);
         $this->assertSame(
             [[$eventSubscriber, "three"], ],
             iterator_to_array($listenerProvider->getListenersForEvent(new Event()))

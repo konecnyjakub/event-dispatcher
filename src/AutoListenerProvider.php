@@ -53,26 +53,26 @@ final class AutoListenerProvider implements ListenerProviderInterface
     }
 
     /**
-     * @param callable[] $callbacks
+     * @param callable[]|object $callbacks
      * @throws ReflectionException
      * @throws InvalidListenerException If the callback is not a valid event listener
      */
-    public function addListeners(iterable $callbacks): void
+    public function addListeners(iterable|object $callbacks): void
     {
-        foreach ($callbacks as $callback) {
-            if (is_callable($callback)) {
-                $this->addListener($callback);
+        if (is_iterable($callbacks)) {
+            foreach ($callbacks as $callback) {
+                if (is_callable($callback)) {
+                    $this->addListener($callback);
+                }
             }
+            return;
         }
-    }
 
-    public function addListenersFromClass(object $object): void
-    {
-        $reflectionClass = new ReflectionClass($object);
+        $reflectionClass = new ReflectionClass($callbacks);
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (count($method->getAttributes(Listener::class)) === 1) {
                 /** @var callable $callback */
-                $callback = [$object, $method->name, ];
+                $callback = [$callbacks, $method->name, ];
                 $this->addListener($callback);
             }
         }
