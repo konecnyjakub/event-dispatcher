@@ -49,7 +49,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
             ->getParameters()[0]
             ->getType();
 
-        $this->addListenerInternal($classname, $callback, $metadata->priority);
+        $this->addListenerInternal($classname, $callback, $metadata);
     }
 
     /**
@@ -90,7 +90,10 @@ final class AutoListenerProvider implements ListenerProviderInterface
                 $callback = [$eventSubscriber, $listener[0]];
                 $this->listenerValidator->validate($callback, $className);
                 $metadata = $this->getListenerMetadata($callback);
-                $this->addListenerInternal($className, $callback, $listener[1] ?? $metadata->priority);
+                if (isset($listener[1]) && $metadata->priority !== $listener[1]) {
+                    $metadata = new Listener(priority: $listener[1]);
+                }
+                $this->addListenerInternal($className, $callback, $metadata);
             }
         }
     }
@@ -98,15 +101,15 @@ final class AutoListenerProvider implements ListenerProviderInterface
     /**
      * @param class-string $className
      */
-    private function addListenerInternal(string $className, callable $callback, int $priority): void
+    private function addListenerInternal(string $className, callable $callback, Listener $metadata): void
     {
         if (!array_key_exists($className, $this->listeners)) {
             $this->listeners[$className] = [];
         }
-        if (!array_key_exists($priority, $this->listeners[$className])) {
-            $this->listeners[$className][$priority] = [];
+        if (!array_key_exists($metadata->priority, $this->listeners[$className])) {
+            $this->listeners[$className][$metadata->priority] = [];
         }
-        $this->listeners[$className][$priority][] = $callback;
+        $this->listeners[$className][$metadata->priority][] = $callback;
     }
 
     /**
