@@ -5,6 +5,7 @@
     "keywords": [
         "event dispatcher",
         "event listener",
+        "event subscriber",
         "events",
         "simple",
         "psr-14"
