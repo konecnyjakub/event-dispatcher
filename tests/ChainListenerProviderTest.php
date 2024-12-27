@@ -19,13 +19,17 @@ final class ChainListenerProviderTest extends TestCase
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
 
         $listenerProvider = new ChainListenerProvider();
-        $provider1 = new PriorityListenerProvider();
-        $provider1->addListener(Event::class, "time");
+        $callback1 = function (Event $event): void {
+        };
+        $provider1 = new AutoListenerProvider();
+        $provider1->addListener($callback1);
         $listenerProvider->registerProvider($provider1);
-        $provider2 = new PriorityListenerProvider();
-        $provider2->addListener(Event::class, "pi");
+        $provider2 = new AutoListenerProvider();
+        $callback2 = function (Event $event): void {
+        };
+        $provider2->addListener($callback2);
         $listenerProvider->registerProvider($provider2);
-        $this->assertSame(["time", "pi", ], $listenerProvider->getListenersForEvent(new Event()));
+        $this->assertSame([$callback1, $callback2, ], $listenerProvider->getListenersForEvent(new Event()));
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
     }
 }
