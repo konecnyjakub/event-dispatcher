@@ -63,6 +63,42 @@ $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
+Another way to register multiple event listeners together is to pass an object to method addListenersFromClass. That automatically adds all public methods on the object with attribute Konecnyjakub\EventDispatcher\Listener as listeners. Example:
+
+```php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\Listener;
+
+class MyEvent {
+
+}
+
+$object = new class {
+    public function one(Event $event): void
+    {
+    }
+
+    public function two(Event $event): void
+    {
+    }
+
+    #[Listener]
+    public function three(Event $event): void
+    {
+    }
+}
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListenersFromClass($object);
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+```
+
+In this example method three is registered as listener.
+
 ### Priority for listeners
 
 The default listener provider supports setting priority for listeners, listeners with higher priority are triggered before those with lower priority. It is set with attribute Konecnyjakub\EventDispatcher\Listener. Example:
@@ -94,7 +130,7 @@ $eventDispatcher->dispatch(new MyEvent());
 
 In the example, function two is called before function one.
 
-Setting priority is supported also with method addListeners, in that case priority is determined separately for each listener.
+Setting priority is supported also with methods addListeners and addListenersFromClass, in that case priority is determined separately for each listener.
 
 The listener provider provides constants  PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW that can be used for setting priority. PRIORITY_NORMAL is assumed if not specified.
 

@@ -54,6 +54,14 @@ final class AutoListenerProviderTest extends TestCase
             iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
+
+        $listenerProvider = new AutoListenerProvider();
+        $listenerProvider->addListenersFromClass($eventSubscriber);
+        $this->assertSame(
+            [[$eventSubscriber, "three"], ],
+            iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
+        );
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
     }
 
     public function testInvalidCallbacks(): void

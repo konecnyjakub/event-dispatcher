@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
+use ReflectionClass;
 use ReflectionException;
+use ReflectionMethod;
 
 final class AutoListenerProvider implements ListenerProviderInterface
 {
@@ -59,6 +61,18 @@ final class AutoListenerProvider implements ListenerProviderInterface
     {
         foreach ($callbacks as $callback) {
             if (is_callable($callback)) {
+                $this->addListener($callback);
+            }
+        }
+    }
+
+    public function addListenersFromClass(object $object): void
+    {
+        $reflectionClass = new ReflectionClass($object);
+        foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (count($method->getAttributes(Listener::class)) === 1) {
+                /** @var callable $callback */
+                $callback = [$object, $method->name, ];
                 $this->addListener($callback);
             }
         }
