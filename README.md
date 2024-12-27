@@ -293,7 +293,7 @@ $eventDispatcher->dispatch(new MyEvent());
 
 In this example, method three is called first, method two second and method one last.
 
-This listener provider is likely to replace PriorityListenerProvider in the future, either by moving its functionality into PriorityListenerProvider or by PriorityListenerProvider being removed.
+In the next major version, PriorityListenerProvider will be removed and this listener provider will become the default one.
 
 ### Debugging dispatched events
 
