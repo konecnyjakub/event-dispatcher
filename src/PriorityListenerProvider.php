@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
+use Deprecated;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
@@ -22,6 +23,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
     /**
      * @param class-string $className
      */
+    #[Deprecated("use method AutoListenerProvider::addListener instead", "1.5")]
     public function registerListener(string $className, callable $callback, int $priority = self::PRIORITY_NORMAL): void
     {
         $this->addListener(...func_get_args()); // @phpstan-ignore argument.type
@@ -30,6 +32,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
     /**
      * @param class-string $className
      */
+    #[Deprecated("use method AutoListenerProvider::addListener instead", "1.5")]
     public function addListener(string $className, callable $callback, int $priority = self::PRIORITY_NORMAL): void
     {
         if (!array_key_exists($className, $this->listeners)) {
@@ -45,6 +48,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
      * @param class-string $classname
      * @param callable[] $callbacks
      */
+    #[Deprecated("use method AutoListenerProvider::addListeners instead", "1.5")]
     public function addListeners(string $classname, iterable $callbacks, int $priority = self::PRIORITY_NORMAL): void
     {
         foreach ($callbacks as $callback) {
@@ -54,6 +58,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
         }
     }
 
+    #[Deprecated("use method AutoListenerProvider::addSubscriber instead", "1.5")]
     public function addSubscriber(IEventSubscriber $eventSubscriber): void
     {
         foreach ($eventSubscriber::getSubscribedEvents() as $className => $listeners) {
@@ -65,6 +70,7 @@ final class PriorityListenerProvider implements ListenerProviderInterface
         }
     }
 
+    #[Deprecated("use method AutoListenerProvider::getListenersForEvent instead", "1.5")]
     public function getListenersForEvent(object $event): iterable
     {
         $listeners = $this->listeners[$event::class] ?? [];
