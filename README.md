@@ -17,90 +17,86 @@ Quick start
 <?php
 declare(strict_types=1);
 
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
 
 }
 
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addListener(MyEvent::class, function (MyEvent $event) {
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListener(function (MyEvent $event): void {
     echo "Event triggered\n";
 });
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
+AutoListenerProvider is a smart listener provider, its method addListener (and others, see below) automatically detects which type of event the added listener is for from the (first) parameter it accepts. But for now, it only accepts objects of that class, not any subclasses. This is the simplest possible use case, AutoListenerProvider has more features, see below.
+
 Advanced usage
 --------------
 
 ### Registering multiple listeners at once
 
-It is possible to register multiple listeners at the same time in PriorityListenerProvider, just pass an array/iterable of arrays into method addListeners.
+It is possible to register multiple listeners at the same time in AutoListenerProvider, just pass an array/iterable of arrays into method addListeners.
 
 ```php
 <?php
 declare(strict_types=1);
 
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
 
 }
 
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addListeners(MyEvent::class, ["time", "pi", ]);
+$callback1 = function (MyEvent $event){
+};
+$callback2 = function (MyEvent $event){
+};
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListeners([$callback1, $callback2, ]);
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
 ### Priority for listeners
 
-The default listener provider supports setting priority for listeners, listeners with higher priority are triggered before those with lower priority. Example:
+The default listener provider supports setting priority for listeners, listeners with higher priority are triggered before those with lower priority. It is set with attribute Konecnyjakub\EventDispatcher\Listener. Example:
 
 ```php
 <?php
 declare(strict_types=1);
 
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
+use Konecnyjakub\EventDispatcher\Listener;
 
 class MyEvent {
 
 }
 
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addListener(MyEvent::class, "time", 0);
-$listenerProvider->addListener(MyEvent::class, "pi", 1);
+function one (MyEvent $event){
+};
+#[Listener(priority: 1)]
+function two (MyEvent $event){
+};
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListener("one");
+$listenerProvider->addListener("two");
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
-In the example, function pi is called before function time.
+In the example, function two is called before function one.
 
-It also possible to register multiple listeners with the same priority at the same time, just use method addListeners.
+Setting priority is supported also with method addListeners, in that case priority is determined separately for each listener.
 
-```php
-<?php
-declare(strict_types=1);
-
-use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
-
-class MyEvent {
-
-}
-
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addListeners(Event::class, ["pi", "time", ], 0);
-$listenerProvider->addListener(Event::class, "getdate", 1);
-$eventDispatcher = new EventDispatcher($listenerProvider);
-$eventDispatcher->dispatch(new MyEvent());
-```
-
-The listener provider provides constants  PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW that can be used for parameter priority of methods addListener/addListeners.
+The listener provider provides constants  PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW that can be used for setting priority. PRIORITY_NORMAL is assumed if not specified.
 
 ### Multiple listener providers
 
@@ -110,19 +106,21 @@ If you need to use multiple listener providers at the same time, just use ChainL
 <?php
 declare(strict_types=1);
 
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\ChainListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 
 class MyEvent {
 
 }
 
 $listenerProvider = new ChainListenerProvider();
-$provider1 = new PriorityListenerProvider();
-$provider1->addListener(MyEvent::class, "time");
-$provider2 = new PriorityListenerProvider();
-$provider2->addListener(MyEvent::class, "pi");
+$provider1 = new AutoListenerProvider();
+$listenerProvider->addListener(function (MyEvent $event): void {
+});
+$provider2 = new AutoListenerProvider();
+$listenerProvider->addListener(function (MyEvent $event): void {
+});
 $listenerProvider->addProvider($provider1);
 $listenerProvider->addProvider($provider2);
 $eventDispatcher = new EventDispatcher($listenerProvider);
@@ -137,116 +135,37 @@ The provided event dispatcher supports stoppable events (as defined in psr). We 
 <?php
 declare(strict_types=1);
 
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 use Konecnyjakub\EventDispatcher\TStoppableEvent;
 
 class MyEvent {
     use TStoppableEvent;
 }
 
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addListener(MyEvent::class, function (MyEvent $event) {
+function one (MyEvent $event){
+};
+#[Listener(priority: 1)]
+function two (MyEvent $event){
     echo "Event triggered\n";
     $event->stopPropagation();
-});
-$listenerProvider->addListener(MyEvent::class, "time");
+};
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListener("one");
+$listenerProvider->addListener("two");
 $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
+
+In this example only function two is run (because it has higher priority and stop the event).
 
 ### Event subscribers
 
-An alternative way to register listeners, is to use event subscribers. An event subscriber is an object which names methods from the same class that listen to a named event. They have to implement the Konecnyjakub\EventDispatcher\IEventSubscriber interface and are added to ListenerProvider or PriorityListenerProvider via method addSubscriber.
+An alternative way to register listeners, is to use event subscribers. An event subscriber is an object which names methods from the same class that listen to a named event. They have to implement the Konecnyjakub\EventDispatcher\IEventSubscriber interface and are added to AutoListenerProvider via method addSubscriber.
 
-The method getSubscribedEvents has to return an array or a traversable object in which the key is a class name (the event's name) and the value is an array of listeners. Each listener is again an array where first value is name of a method of the same class and second value can be a priority for that listener (it is of course taken into account only by PriorityListenerProvider).
+The method getSubscribedEvents has to return an array or a traversable object in which the key is a class name (the event's name) and the value is an array of listeners. Each listener is again an array where first value is name of a method of the same class and second value can be a priority for that listener. Priority specified this way overrides priority set by the attribute.
 
-
-```php
-<?php
-declare(strict_types=1);
-
-use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\IEventSubscriber;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
-
-class MyEvent {
-
-}
-
-$eventSubscriber = new class implements IEventSubscriber
-{
-    public function one(): void
-    {
-    }
-    
-    public function two(): void
-    {
-    }
-    
-    public static function getSubscribedEvents(): iterable
-    {
-        return [
-            Event::class => [
-                ["one", ], ["two", 1, ],
-            ]
-        ];
-    }
-};
-
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addSubscriber($eventSubscriber);
-$eventDispatcher = new EventDispatcher($listenerProvider);
-$eventDispatcher->dispatch(new MyEvent());
-```
-
-In the example method two is called before method one.
-
-### Easier registration of listeners
-
-There is an experimental listener provider, AutoListenerProvider that makes registration of event listeners even easier. It has the same methods as PriorityListenerProvider (addListener, addListeners and addSubscriber) but you only have to pass the listener itself to methods addListener and addListeners, everything else (type of event it listens to and priority) is determined from the callback itself (its signature or a used attribute). That obviously requires the callback to have properly type hinted the parameter (and have void return type hinted as recommended by the psr). Other metadata (at the moment only priority) can be specified by attribute Konecnyjakub\EventDispatcher\Listener. Event subscribers are defined the same way as with PriorityListenerProvider but if priority is not specified in the result of method getSubscribedEvents, it is taken from the above mentioned attribute if present. Examples:
-
-```php
-<?php
-declare(strict_types=1);
-
-use Konecnyjakub\EventDispatcher\AutoListenerProvider;
-use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\Listener;
-
-class MyEvent {
-
-}
-
-#[Listener(priority: 1)]
-final class InvokableListener
-{
-    public function __invoke(Event $event): void
-    {
-    }
-}
-
-$closure = function (Event $event): void {
-};
-$invokableListener = new InvokableListener();
-$object = new class
-{
-    #[Listener(priority: AutoListenerProvider::PRIORITY_HIGH)]
-    public function listener(Event $event): void
-    {
-    }
-};
-$arrayListener = [$object, "listener", ];
-
-$listenerProvider = new AutoListenerProvider();
-$listenerProvider->addListener($closure);
-$listenerProvider->addListener($invokableListener);
-$listenerProvider->addListener($arrayListener);
-$eventDispatcher = new EventDispatcher($listenerProvider);
-$eventDispatcher->dispatch(new MyEvent());
-```
-
-In this example, $arrayListener is called first, $invokableListener second and $closure last.
 
 ```php
 <?php
@@ -293,8 +212,6 @@ $eventDispatcher->dispatch(new MyEvent());
 
 In this example, method three is called first, method two second and method one last.
 
-In the next major version, PriorityListenerProvider will be removed and this listener provider will become the default one.
-
 ### Debugging dispatched events
 
 If you want to debug dispatched events, you can use included DebugEventDispatcher. Its constructor takes an event dispatcher (to which dispatching events is delegated) and a [PSR-3](https://www.php-fig.org/psr/psr-3/) logger which is used to log relevant info.
@@ -307,17 +224,22 @@ It can also tell you if an event of a certain type of dispatched, just use metho
 <?php
 declare(strict_types=1);
 
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\DebugEventDispatcher;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Konecnyjakub\EventDispatcher\PriorityListenerProvider;
 use Psr\Log\NullLogger;
 
 class MyEvent {
 
 }
 
-$listenerProvider = new PriorityListenerProvider();
-$listenerProvider->addListeners(MyEvent::class, ["time", "pi", ]);
+$callback1 = function (MyEvent $event){
+};
+$callback2 = function (MyEvent $event){
+};
+
+$listenerProvider = new AutoListenerProvider();
+$listenerProvider->addListeners([$callback1, $callback2, ]);
 $logger = new class extends AbstractLogger
 {
     public array $records = [];
