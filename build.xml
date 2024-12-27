@@ -6,7 +6,7 @@
             <arg value="--prefer-dist"/>
             <arg value="--no-progress"/>
             <arg value="--no-interaction"/>
-            <env key="COMPOSER_ROOT_VERSION" value="1.999"/>
+            <env key="COMPOSER_ROOT_VERSION" value="2.999"/>
         </exec>
         <if>
             <not>
