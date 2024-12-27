@@ -4,14 +4,12 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Konecnyjakub\EventDispatcher\Events\Event;
-use MyTester\Attributes\IgnoreDeprecations;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
 
 #[TestSuite("ChainListenerProvider")]
 final class ChainListenerProviderTest extends TestCase
 {
-    #[IgnoreDeprecations]
     public function testGetListenersForEvent(): void
     {
         $listenerProvider = new ChainListenerProvider();
@@ -23,12 +21,12 @@ final class ChainListenerProviderTest extends TestCase
         };
         $provider1 = new AutoListenerProvider();
         $provider1->addListener($callback1);
-        $listenerProvider->registerProvider($provider1);
+        $listenerProvider->addProvider($provider1);
         $provider2 = new AutoListenerProvider();
         $callback2 = function (Event $event): void {
         };
         $provider2->addListener($callback2);
-        $listenerProvider->registerProvider($provider2);
+        $listenerProvider->addProvider($provider2);
         $this->assertSame([$callback1, $callback2, ], $listenerProvider->getListenersForEvent(new Event()));
         $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass()));
     }

@@ -1,3 +1,6 @@
+Version 2.0.0-dev
+- removed classes ListenerProvider and PriorityListenerProvider and method ChainListenerProvider::registerProvider
+
 Version 1.5.0
 - deprecated PriorityListenerProvider in favor of AutoListenerProvider
 
