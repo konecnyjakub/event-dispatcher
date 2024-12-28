@@ -1,5 +1,3 @@
-A new version of Event Dispatcher is out. Deprecated classes ListenerProvider and PriorityListenerProvider and method ChainListenerProvider::registerProvider were removed.
-
-It is now possible to register listeners from an object via method AutoListenerProvider::addListeners.
+A new version of Event Dispatcher is out.
 
 For complete list of changes since previous version, see CHANGELOG.md.
