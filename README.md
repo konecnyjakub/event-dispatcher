@@ -140,7 +140,7 @@ $eventDispatcher->dispatch(new MyEvent());
 
 In the example, function two is called before function one.
 
-Setting priority is supported also with methods addListeners and addListenersFromClass, in that case priority is determined separately for each listener.
+Setting priority is supported also with method addListeners, in that case priority is determined separately for each listener.
 
 The listener provider provides constants  PRIORITY_HIGH, PRIORITY_NORMAL and PRIORITY_LOW that can be used for setting priority. PRIORITY_NORMAL is assumed if not specified.
 
@@ -204,11 +204,11 @@ $eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
-In this example only function two is run (because it has higher priority and stop the event).
+In this example only function two is run (because it has higher priority and stops the event).
 
 ### Event subscribers
 
-An alternative way to register listeners, is to use event subscribers. An event subscriber is an object which names methods from the same class that listen to a named event. They have to implement the Konecnyjakub\EventDispatcher\IEventSubscriber interface and are added to AutoListenerProvider via method addSubscriber.
+An alternative way to register listeners is to use event subscribers. An event subscriber is an object which names methods from the same class that listen to a named event. They have to implement the Konecnyjakub\EventDispatcher\IEventSubscriber interface and are added to AutoListenerProvider via method addSubscriber.
 
 The method getSubscribedEvents has to return an array or a traversable object in which the key is a class name (the event's name) and the value is an array of listeners. Each listener is again an array where first value is name of a method of the same class and second value can be a priority for that listener. Priority specified this way overrides priority set by the attribute.
 
@@ -264,7 +264,7 @@ If you want to debug dispatched events, you can use included DebugEventDispatche
 
 Currently it only logs that an event was dispatched.
 
-It can also tell you if an event of a certain type of dispatched, just use method dispatched with a class name. You can also specify with second optional parameter how many times it should have been dispatched.
+It can also tell you if an event of a certain type was dispatched, just use method dispatched with a class name. You can also specify with second optional parameter at least how many times it should have been dispatched.
 
 ```php
 <?php
