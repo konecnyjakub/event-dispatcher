@@ -309,3 +309,21 @@ $eventDispatcher->dispatched(MyEvent::class, 1); // true
 $eventDispatcher->dispatched(MyEvent::class, 2); // false
 count($logger->records); // 1
 ```
+
+### Simple event dispatcher
+
+If you are in a situation where you need to pass an event dispatcher somewhere but want it to do absolutely nothing (e. g. in tests), you can use DummyEventDispatcher. It does not do anything with the passed event, just return it like the psr requires. An example:
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\DummyEventDispatcher;
+
+class MyEvent {
+
+}
+
+$eventDispatcher = new DummyEventDispatcher();
+$eventDispatcher->dispatch(new MyEvent()); // nothing happens
+```

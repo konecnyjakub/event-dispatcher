@@ -1,3 +1,6 @@
+Version 2.1.0-dev
+- added DummyEventDispatcher
+
 Version 2.0.0
 - removed classes ListenerProvider and PriorityListenerProvider and method ChainListenerProvider::registerProvider
 - added option to register multiple listeners from an object in AutoListenerProvider
