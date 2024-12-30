@@ -47,7 +47,7 @@ final class ListenerValidator
 
     /**
      * @throws ReflectionException
-     * @throws InvalidListenerException If the callback is not a valid event listener
+     * @throws InvalidListenerException
      */
     public function validate(callable $callback, ?string $eventName = null): void
     {

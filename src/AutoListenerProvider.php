@@ -36,7 +36,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
 
     /**
      * @throws ReflectionException
-     * @throws InvalidListenerException If the callback is not a valid event listener
+     * @throws InvalidListenerException
      */
     public function addListener(callable $callback): void
     {
@@ -55,7 +55,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
     /**
      * @param callable[]|object $callbacks
      * @throws ReflectionException
-     * @throws InvalidListenerException If the callback is not a valid event listener
+     * @throws InvalidListenerException
      */
     public function addListeners(iterable|object $callbacks): void
     {
@@ -80,7 +80,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
 
     /**
      * @throws ReflectionException
-     * @throws InvalidListenerException If the callback is not a valid event listener
+     * @throws InvalidListenerException
      */
     public function addSubscriber(IEventSubscriber $eventSubscriber): void
     {
