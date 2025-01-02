@@ -1,5 +1,6 @@
 Version 2.1.0-dev
 - added DummyEventDispatcher
+- fixed method DebugEventDispatcher::dispatched sometimes returning incorrect result
 
 Version 2.0.0
 - removed classes ListenerProvider and PriorityListenerProvider and method ChainListenerProvider::registerProvider

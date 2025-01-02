@@ -32,7 +32,7 @@ final class DebugEventDispatcher implements EventDispatcherInterface
      */
     public function dispatched(string $event, int $atLeastTimes = 1): bool
     {
-        $times = (array_key_exists($event, $this->dispatchedEvents)) ? count($this->dispatchedEvents) : 0;
+        $times = $this->dispatchedEvents[$event] ?? 0;
         return $times >= $atLeastTimes;
     }
 }

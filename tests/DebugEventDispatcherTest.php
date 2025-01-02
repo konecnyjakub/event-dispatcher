@@ -8,7 +8,6 @@ use Konecnyjakub\EventDispatcher\Events\TestStoppableEvent;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
 use Psr\Log\AbstractLogger;
-use Psr\Log\LoggerInterface;
 
 #[TestSuite("DebugEventDispatcher")]
 final class DebugEventDispatcherTest extends TestCase
@@ -36,6 +35,7 @@ final class DebugEventDispatcherTest extends TestCase
         };
         $eventDispatcher = new DebugEventDispatcher(new EventDispatcher($listenerProvider), $logger);
         $this->assertFalse($eventDispatcher->dispatched($event::class));
+        $this->assertFalse($eventDispatcher->dispatched(TestStoppableEvent::class));
         $this->assertSame($event, $eventDispatcher->dispatch($event));
         $this->assertSame(1, $var);
         $this->assertCount(1, $logger->records);
@@ -46,5 +46,6 @@ final class DebugEventDispatcherTest extends TestCase
         ], $logger->records[0]);
         $this->assertTrue($eventDispatcher->dispatched($event::class));
         $this->assertFalse($eventDispatcher->dispatched($event::class, 2));
+        $this->assertFalse($eventDispatcher->dispatched(TestStoppableEvent::class));
     }
 }
