@@ -43,7 +43,7 @@ Anything that is a callable. You can pass an anonymous function, a function name
 
 ### Metadata for listeners
 
-When registering a listener, AutoListenerProvider automatically looks for its metadata. You can metadata to a listener via attribute Konecnyjakub\EventDispatcher\Listener.
+When registering a listener, AutoListenerProvider automatically looks for its metadata. You can add metadata to a listener via attribute Konecnyjakub\EventDispatcher\Listener.
 
 Currently only one feature is implemented via metadata: priority. It is described in detail later in this document.
 
@@ -162,7 +162,7 @@ class MyEvent {
 
 $listenerProvider = new ChainListenerProvider();
 $provider1 = new AutoListenerProvider();
-$listenerProvider->addListener(function (MyEvent $event): void {
+$provider1->addListener(function (MyEvent $event): void {
 });
 $provider2 = new AutoListenerProvider();
 $listenerProvider->addListener(function (MyEvent $event): void {
@@ -183,6 +183,7 @@ declare(strict_types=1);
 
 use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\Listener;
 use Konecnyjakub\EventDispatcher\TStoppableEvent;
 
 class MyEvent {
@@ -273,7 +274,7 @@ declare(strict_types=1);
 use Konecnyjakub\EventDispatcher\AutoListenerProvider;
 use Konecnyjakub\EventDispatcher\DebugEventDispatcher;
 use Konecnyjakub\EventDispatcher\EventDispatcher;
-use Psr\Log\NullLogger;
+use Psr\Log\AbstractLogger;
 
 class MyEvent {
 
@@ -310,7 +311,7 @@ $eventDispatcher->dispatched(MyEvent::class, 2); // false
 count($logger->records); // 1
 ```
 
-Alternatively, if you only want to log dispatched events, you can just pass a PSR-3 logger to EventDispatcher's constructor. If it is set, the dispatch method will automatically use it log.
+Alternatively, if you only want to log dispatched events, you can just pass a PSR-3 logger to EventDispatcher's constructor. If it is set, the dispatch method will automatically use it to log.
 
 ### Simple event dispatcher
 
