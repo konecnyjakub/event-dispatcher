@@ -1,4 +1,4 @@
-Version 2.1.0-dev
+Version 2.1.0
 - added DummyEventDispatcher
 - fixed method DebugEventDispatcher::dispatched sometimes returning incorrect result
 - EventDispatcher can now log dispatched events
