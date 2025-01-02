@@ -35,7 +35,7 @@
         "psr/log": "^3.0"
     },
     "suggest": {
-        "psr/log": "To use DebugEventDispatcher"
+        "psr/log": "To log dispatched events"
     },
     "provide": {
         "psr/event-dispatcher-implementation": "1.0"

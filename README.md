@@ -310,6 +310,8 @@ $eventDispatcher->dispatched(MyEvent::class, 2); // false
 count($logger->records); // 1
 ```
 
+Alternatively, if you only want to log dispatched events, you can just pass a PSR-3 logger to EventDispatcher's constructor. If it is set, the dispatch method will automatically use it log.
+
 ### Simple event dispatcher
 
 If you are in a situation where you need to pass an event dispatcher somewhere but want it to do absolutely nothing (e. g. in tests), you can use DummyEventDispatcher. It does not do anything with the passed event, just return it like the psr requires. An example:

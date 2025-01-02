@@ -6,11 +6,14 @@ namespace Konecnyjakub\EventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
+use Psr\Log\LoggerInterface;
 
 final readonly class EventDispatcher implements EventDispatcherInterface
 {
-    public function __construct(private ListenerProviderInterface $listenerProvider)
-    {
+    public function __construct(
+        private ListenerProviderInterface $listenerProvider,
+        private ?LoggerInterface $logger = null
+    ) {
     }
 
     /**
@@ -20,6 +23,7 @@ final readonly class EventDispatcher implements EventDispatcherInterface
      */
     public function dispatch(object $event): object
     {
+        $this->logger?->debug("Dispatched event", ["type" => $event::class, "event" => $event, ]);
         /** @var callable[] $listeners */
         $listeners = $this->listenerProvider->getListenersForEvent($event);
         foreach ($listeners as $listener) {

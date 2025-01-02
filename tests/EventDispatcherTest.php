@@ -37,5 +37,17 @@ final class EventDispatcherTest extends TestCase
         $this->assertSame($event, $eventDispatcher->dispatch($event));
         $this->assertSame(1, $var);
         $this->assertTrue($event->isPropagationStopped());
+
+        $event = new Event();
+        $logger = new TestLogger();
+        $listenerProvider = new AutoListenerProvider();
+        $eventDispatcher = new EventDispatcher($listenerProvider, $logger);
+        $eventDispatcher->dispatch($event);
+        $this->assertCount(1, $logger->records);
+        $this->assertSame([
+            "message" => "Dispatched event",
+            "type" => $event::class,
+            "event" => $event,
+        ], $logger->records[0]);
     }
 }

@@ -7,7 +7,6 @@ use Konecnyjakub\EventDispatcher\Events\Event;
 use Konecnyjakub\EventDispatcher\Events\TestStoppableEvent;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
-use Psr\Log\AbstractLogger;
 
 #[TestSuite("DebugEventDispatcher")]
 final class DebugEventDispatcherTest extends TestCase
@@ -20,19 +19,7 @@ final class DebugEventDispatcherTest extends TestCase
         $listenerProvider->addListener(function (Event $event) use (&$var): void {
             $var++;
         });
-        $logger = new class extends AbstractLogger
-        {
-            public array $records = [];
-
-            public function log($level, \Stringable|string $message, array $context = []): void
-            {
-                $this->records[] = [
-                    "message" => $message,
-                    "type" => $context["type"],
-                    "event" => $context["event"],
-                ];
-            }
-        };
+        $logger = new TestLogger();
         $eventDispatcher = new DebugEventDispatcher(new EventDispatcher($listenerProvider), $logger);
         $this->assertFalse($eventDispatcher->dispatched($event::class));
         $this->assertFalse($eventDispatcher->dispatched(TestStoppableEvent::class));
