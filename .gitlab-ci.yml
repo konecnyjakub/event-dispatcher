@@ -1,7 +1,5 @@
 include:
-    -   template: Security/Dependency-Scanning.gitlab-ci.yml
-    -   template: SAST.gitlab-ci.yml
-    -   template: Secret-Detection.gitlab-ci.yml
+    -   template: Jobs/Secret-Detection.gitlab-ci.yml
 
 stages:
     - test
@@ -40,10 +38,6 @@ test:reports:
                 path: coverage.xml
             junit: junit.xml
             codequality: phpstan.json
-
-sast:
-    variables:
-        SAST_DEFAULT_ANALYZERS: "phpcs-security-audit"
 
 announce:gitlab:
     stage: announce
