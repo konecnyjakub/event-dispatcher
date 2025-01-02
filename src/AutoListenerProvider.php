@@ -23,6 +23,9 @@ final class AutoListenerProvider implements ListenerProviderInterface
     {
     }
 
+    /**
+     * @return callable[]
+     */
     public function getListenersForEvent(object $event): iterable
     {
         $listeners = $this->listeners[$event::class] ?? [];

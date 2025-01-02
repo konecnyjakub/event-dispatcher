@@ -21,7 +21,7 @@ final class ListenerValidator
         if (is_object($callback) && !$callback instanceof Closure) {
             return new ReflectionMethod($callback, "__invoke");
         } elseif (is_array($callback)) {
-            // @phpstan-ignore argument.type, argument.type
+            /** @var callable&array{0: class-string, 1: string} $callback */
             return new ReflectionMethod($callback[0], $callback[1]);
         } else {
             /** @var (Closure|string)&callable $callback */

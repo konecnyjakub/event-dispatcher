@@ -15,12 +15,16 @@ final class ChainListenerProvider implements ListenerProviderInterface
         $this->providers[] = $listenerProvider;
     }
 
+    /**
+     * @return callable[]
+     */
     public function getListenersForEvent(object $event): iterable
     {
         $listeners = [];
         foreach ($this->providers as $listenerProvider) {
             $listeners = array_merge($listeners, iterator_to_array($listenerProvider->getListenersForEvent($event)));
         }
+        /** @var callable[] $listeners */
         return $listeners;
     }
 }
