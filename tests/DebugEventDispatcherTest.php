@@ -47,5 +47,8 @@ final class DebugEventDispatcherTest extends TestCase
         $this->assertTrue($eventDispatcher->dispatched($event::class));
         $this->assertFalse($eventDispatcher->dispatched($event::class, 2));
         $this->assertFalse($eventDispatcher->dispatched(TestStoppableEvent::class));
+        $this->assertSame($event, $eventDispatcher->dispatch($event));
+        $this->assertTrue($eventDispatcher->dispatched($event::class, 2));
+        $this->assertFalse($eventDispatcher->dispatched(TestStoppableEvent::class, 2));
     }
 }
