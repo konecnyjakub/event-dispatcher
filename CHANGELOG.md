@@ -1,3 +1,6 @@
+Version 2.2.0-dev
+- added option to register services from container as listeners
+
 Version 2.1.0
 - added DummyEventDispatcher
 - fixed method DebugEventDispatcher::dispatched sometimes returning incorrect result

@@ -62,6 +62,18 @@ final class AutoListenerProviderTest extends TestCase
             iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
+
+        $container = new TestContainer();
+        $container->set("service1", $invokableListener);
+        $container->set("service2", $closure);
+        $listenerProvider = new AutoListenerProvider(container: $container);
+        $listenerProvider->addServiceListener("service2");
+        $listenerProvider->addServiceListener("service1");
+        $this->assertSame(
+            [$invokableListener, $closure, ],
+            iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
+        );
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
     }
 
     public function testInvalidCallbacks(): void
@@ -87,6 +99,32 @@ final class AutoListenerProviderTest extends TestCase
             $listenerProvider->addListener(function (Event $event): null {
                 return null;
             });
+        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
+        $this->assertThrowsException(function () {
+            $listenerProvider = new AutoListenerProvider();
+            $listenerProvider->addServiceListener("test");
+        }, ContainerNotSetException::class);
+        $this->assertThrowsException(function () {
+            $container = new TestContainer();
+            $listenerProvider = new AutoListenerProvider(container: $container);
+            $listenerProvider->addServiceListener("test");
+        }, InvalidListenerException::class, "The container does not have service 'test'");
+        $this->assertThrowsException(function () {
+            $container = new TestContainer();
+            $container->set("test", "abc");
+            $listenerProvider = new AutoListenerProvider(container: $container);
+            $listenerProvider->addServiceListener("test");
+        }, InvalidListenerException::class, "Service 'test' is not an object");
+        $this->assertThrowsException(function () {
+            $container = new TestContainer();
+            $container->set("test", new class {
+                public function method(Event $event): string
+                {
+                    return "";
+                }
+            });
+            $listenerProvider = new AutoListenerProvider(container: $container);
+            $listenerProvider->addServiceListener("test", "method");
         }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
     }
 }

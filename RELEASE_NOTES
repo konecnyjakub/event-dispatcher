@@ -1,3 +1,3 @@
-A new version of Event Dispatcher is out.
+A new version of Event Dispatcher is out. It is now possible to register services from a PSR-11 container as listeners.
 
 For complete list of changes since previous version, see CHANGELOG.md.

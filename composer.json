@@ -32,10 +32,12 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "konecnyjakub/mytester": "^7.3",
-        "psr/log": "^3.0"
+        "psr/log": "^3.0",
+        "psr/container": "^2.0"
     },
     "suggest": {
-        "psr/log": "To log dispatched events"
+        "psr/log": "To log dispatched events",
+        "psr/container": "To use services as listeners"
     },
     "provide": {
         "psr/event-dispatcher-implementation": "1.0"
@@ -55,7 +57,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1.x-dev"
+            "dev-master": "2.2.x-dev"
         }
     }
 }

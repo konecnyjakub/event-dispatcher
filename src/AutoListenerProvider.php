@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -19,8 +21,10 @@ final class AutoListenerProvider implements ListenerProviderInterface
      */
     private array $listeners = [];
 
-    public function __construct(private readonly ListenerValidator $listenerValidator = new ListenerValidator())
-    {
+    public function __construct(
+        private readonly ListenerValidator $listenerValidator = new ListenerValidator(),
+        private readonly ?ContainerInterface $container = null
+    ) {
     }
 
     /**
@@ -99,6 +103,35 @@ final class AutoListenerProvider implements ListenerProviderInterface
                 $this->addListenerInternal($className, $callback, $metadata);
             }
         }
+    }
+
+    /**
+     * @throws ContainerNotSetException
+     * @throws InvalidListenerException
+     * @throws ReflectionException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function addServiceListener(string $serviceName, string $method = "__invoke"): void
+    {
+        if ($this->container === null) {
+            throw new ContainerNotSetException();
+        }
+        try {
+            $service = $this->container->get($serviceName);
+        } catch (NotFoundExceptionInterface $e) {
+            throw new InvalidListenerException("The container does not have service '$serviceName'", 0, $e);
+        }
+        if (!is_object($service)) {
+            throw new InvalidListenerException("Service '$serviceName' is not an object");
+        }
+        /** @var callable&(array{object, string}|object) $callback */
+        $callback = $method === "__invoke" ? $service : [$service, $method];
+        $this->listenerValidator->validate($callback);
+        $metadata = $this->getListenerMetadata($callback);
+        $reflection = $this->listenerValidator->getListenerReflection($callback);
+        /** @var class-string $className */
+        $className = (string) $reflection->getParameters()[0]->getType();
+        $this->addListenerInternal($className, $callback, $metadata);
     }
 
     /**

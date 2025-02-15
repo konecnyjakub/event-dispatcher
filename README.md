@@ -254,10 +254,75 @@ final class EventSubscriber implements IEventSubscriber
 
 $listenerProvider = new AutoListenerProvider();
 $listenerProvider->addSubscriber(new EventSubscriber());
+$eventDispatcher = new EventDispatcher($listenerProvider);
 $eventDispatcher->dispatch(new MyEvent());
 ```
 
 In this example, method three is called first, method two second and method one last.
+
+### Container services as listeners
+
+It is possible to register services from a [PSR-11](https://www.php-fig.org/psr/psr-11/) container as listeners. You have to pass a container to AutoListenerProvider's container and then you can use method addServiceListener. The method addServiceListener takes name of the service as first parameter, you can pass a method name as second parameter (default value is __invoke). The service has to be an object.
+
+```php
+<?php
+declare(strict_types=1);
+
+use Konecnyjakub\EventDispatcher\AutoListenerProvider;
+use Konecnyjakub\EventDispatcher\EventDispatcher;
+use Konecnyjakub\EventDispatcher\Listener;
+use Psr\Container\ContainerInterface;
+
+class MyEvent {
+
+}
+
+#[Listener(priority: 1)]
+final class ServiceOne {
+    public function __invoke(MyEvent $event): void {
+    }
+}
+
+final class ServiceTwo {
+    public function method(MyEvent $event): void {
+    }
+}
+
+$container = new class implements ContainerInterface{
+    /** @var array<string, mixed> */
+    private array $services = [];
+
+    public function get(string $id): mixed
+    {
+        if (!$this->has($id)) {
+            throw new class extends RuntimeException implements NotFoundExceptionInterface
+            {
+            };
+        }
+        return $this->services[$id];
+    }
+
+    public function has(string $id): bool
+    {
+        return array_key_exists($id, $this->services);
+    }
+
+    public function set(string $id, mixed $service): void
+    {
+        $this->services[$id] = $service;
+    }
+};
+$container->set("one", new ServiceOne());
+$container->set("two", new ServiceTwo());
+
+$listenerProvider = new AutoListenerProvider(container: $container);
+$listenerProvider->addServiceListener("two", "method");
+$listenerProvider->addServiceListener("one");
+$eventDispatcher = new EventDispatcher($listenerProvider);
+$eventDispatcher->dispatch(new MyEvent());
+```
+
+In this example, method ServiceOne::__invoke is called first, method ServiceTwo::method second.
 
 ### Debugging dispatched events
 
