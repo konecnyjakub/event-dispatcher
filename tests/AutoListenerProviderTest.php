@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Konecnyjakub\EventDispatcher;
 
+use Konecnyjakub\Container\SimpleContainer;
 use Konecnyjakub\EventDispatcher\Events\Event;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
@@ -63,7 +64,7 @@ final class AutoListenerProviderTest extends TestCase
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
-        $container = new TestContainer();
+        $container = new SimpleContainer();
         $container->set("service1", $invokableListener);
         $container->set("service2", $closure);
         $listenerProvider = new AutoListenerProvider(container: $container);
@@ -105,18 +106,18 @@ final class AutoListenerProviderTest extends TestCase
             $listenerProvider->addServiceListener("test");
         }, ContainerNotSetException::class);
         $this->assertThrowsException(function () {
-            $container = new TestContainer();
+            $container = new SimpleContainer();
             $listenerProvider = new AutoListenerProvider(container: $container);
             $listenerProvider->addServiceListener("test");
         }, InvalidListenerException::class, "The container does not have service 'test'");
         $this->assertThrowsException(function () {
-            $container = new TestContainer();
+            $container = new SimpleContainer();
             $container->set("test", "abc");
             $listenerProvider = new AutoListenerProvider(container: $container);
             $listenerProvider->addServiceListener("test");
         }, InvalidListenerException::class, "Service 'test' is not an object");
         $this->assertThrowsException(function () {
-            $container = new TestContainer();
+            $container = new SimpleContainer();
             $container->set("test", new class {
                 public function method(Event $event): string
                 {

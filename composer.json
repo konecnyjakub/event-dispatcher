@@ -33,7 +33,7 @@
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "konecnyjakub/mytester": "^7.3",
         "psr/log": "^3.0",
-        "psr/container": "^2.0"
+        "konecnyjakub/container": "^1.0"
     },
     "suggest": {
         "psr/log": "To log dispatched events",
