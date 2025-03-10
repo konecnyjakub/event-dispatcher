@@ -1,5 +1,6 @@
 Version 2.2.0-dev
 - added option to register services from container as listeners
+- deprecated IEventSubscriber in favor of new EventSubscriber
 
 Version 2.1.0
 - added DummyEventDispatcher

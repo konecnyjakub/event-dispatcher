@@ -89,7 +89,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
      * @throws ReflectionException
      * @throws InvalidListenerException
      */
-    public function addSubscriber(IEventSubscriber $eventSubscriber): void
+    public function addSubscriber(EventSubscriber $eventSubscriber): void
     {
         foreach ($eventSubscriber::getSubscribedEvents() as $className => $listeners) {
             foreach ($listeners as $listener) {

@@ -5,7 +5,7 @@ namespace Konecnyjakub\EventDispatcher;
 
 use Konecnyjakub\EventDispatcher\Events\Event;
 
-final class TestEventSubscriber implements IEventSubscriber
+final class TestEventSubscriber implements IEventSubscriber // @phpstan-ignore class.implementsDeprecatedInterface
 {
     public function one(Event $event): void
     {
