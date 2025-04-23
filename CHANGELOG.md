@@ -1,4 +1,4 @@
-Version 2.2.0-dev
+Version 2.2.0
 - added option to register services from container as listeners
 - deprecated IEventSubscriber in favor of new EventSubscriber
 
