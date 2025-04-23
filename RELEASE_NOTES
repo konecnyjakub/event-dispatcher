@@ -1,5 +1,3 @@
-A new version of Event Dispatcher is out. It is now possible to register services from a PSR-11 container as listeners.
-
-We want to stop using I prefix for interfaces' names so IEventSubscriber is deprecated in favor of new EventSubscriber. The former will be removed in next major version.
+A new version of Event Dispatcher is out.
 
 For complete list of changes since previous version, see CHANGELOG.md.
