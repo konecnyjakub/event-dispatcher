@@ -39,7 +39,7 @@ Advanced usage
 
 ### What can be registered as listener
 
-Anything that is a callable. You can pass an anonymous function, a function name as string, an object with the __invoke method, an array with an object at index 0 and a method name at index 1, static class method as string. See PHP documentation on [callables](https://www.php.net/manual/en/language.types.callable.php), if it is described on that page, it can used as listener.
+Anything that is a callable. You can pass an anonymous function, a function name as string, an object with the __invoke method, an array with an object at index 0 and a method name at index 1, static class method as string. See PHP documentation on [callables](https://www.php.net/manual/en/language.types.callable.php), if it is described on that page, it can be used as listener.
 
 ### Metadata for listeners
 
@@ -380,7 +380,7 @@ Alternatively, if you only want to log dispatched events, you can just pass a PS
 
 ### Simple event dispatcher
 
-If you are in a situation where you need to pass an event dispatcher somewhere but want it to do absolutely nothing (e. g. in tests), you can use DummyEventDispatcher. It does not do anything with the passed event, just return it like the psr requires. An example:
+If you are in a situation where you need to pass an event dispatcher somewhere but want it to do absolutely nothing (e.g. in tests), you can use DummyEventDispatcher. It does not do anything with the passed event, just return it like the psr requires. An example:
 
 ```php
 <?php
