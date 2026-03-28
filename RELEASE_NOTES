@@ -1,3 +1,3 @@
-A new version of Event Dispatcher is out. It fixes an exception message in ListenerValidator::validate().
+A new version of Event Dispatcher is out. It fixes an exception message in ListenerValidator::validate(). There are exception codes for InvalidListenerException now.
 
 For complete list of changes since previous version, see CHANGELOG.md.

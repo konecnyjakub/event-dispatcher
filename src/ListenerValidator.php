@@ -53,19 +53,31 @@ final class ListenerValidator
     {
         $reflection = $this->getListenerReflection($callback);
         if ($reflection->getNumberOfParameters() !== 1) {
-            throw new InvalidListenerException("The callback has to accept exactly 1 parameter");
+            throw new InvalidListenerException(
+                "The callback has to accept exactly 1 parameter",
+                InvalidListenerException::CODE_WRONG_NUMBER_OF_PARAMETERS
+            );
         }
         if (!class_exists((string) $reflection->getParameters()[0]->getType())) {
-            throw new InvalidListenerException("The callback's first parameter has to be a class name");
+            throw new InvalidListenerException(
+                "The callback's first parameter has to be a class name",
+                InvalidListenerException::CODE_WRONG_PARAMETER_TYPE
+            );
         }
         if ($eventName !== null && (string) $reflection->getParameters()[0]->getType() !== $eventName) {
-            throw new InvalidListenerException("The callback's first parameter has to be $eventName");
+            throw new InvalidListenerException(
+                "The callback's first parameter has to be $eventName",
+                InvalidListenerException::CODE_PARAMETER_NOT_EVENT
+            );
         }
         if (
             !$reflection->getReturnType() instanceof ReflectionNamedType ||
             $reflection->getReturnType()->getName() !== "void"
         ) {
-            throw new InvalidListenerException("The callback's return type has to be explicitly set to void");
+            throw new InvalidListenerException(
+                "The callback's return type has to be explicitly set to void",
+                InvalidListenerException::CODE_WRONG_RETURN_TYPE
+            );
         }
     }
 }

@@ -1,5 +1,6 @@
 Version 2.2.0+dev
 - fixed an exception message in ListenerValidator::validate()
+- added exception codes for InvalidListenerException
 
 Version 2.2.0
 - added option to register services from container as listeners

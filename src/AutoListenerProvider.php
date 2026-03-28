@@ -119,10 +119,17 @@ final class AutoListenerProvider implements ListenerProviderInterface
         try {
             $service = $this->container->get($serviceName);
         } catch (NotFoundExceptionInterface $e) {
-            throw new InvalidListenerException("The container does not have service '$serviceName'", 0, $e);
+            throw new InvalidListenerException(
+                "The container does not have service '$serviceName'",
+                InvalidListenerException::CODE_SERVICE_NOT_IN_CONTAINER,
+                $e
+            );
         }
         if (!is_object($service)) {
-            throw new InvalidListenerException("Service '$serviceName' is not an object");
+            throw new InvalidListenerException(
+                "Service '$serviceName' is not an object",
+                InvalidListenerException::CODE_WRONG_SERVICE_TYPE
+            );
         }
         /** @var callable&(array{object, string}|object) $callback */
         $callback = $method === "__invoke" ? $service : [$service, $method];
