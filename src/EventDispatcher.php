@@ -24,9 +24,8 @@ final readonly class EventDispatcher implements EventDispatcherInterface
     public function dispatch(object $event): object
     {
         $this->logger?->debug("Dispatched event", ["type" => $event::class, "event" => $event, ]);
-        /** @var callable[] $listeners */
-        $listeners = $this->listenerProvider->getListenersForEvent($event);
-        foreach ($listeners as $listener) {
+        /** @var callable $listener */
+        foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) {
             if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
                 break;
             }
