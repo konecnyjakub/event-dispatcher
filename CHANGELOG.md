@@ -1,4 +1,4 @@
-Version 2.2.0+dev
+Version 2.2.1
 - fixed an exception message in ListenerValidator::validate()
 - added exception codes for InvalidListenerException
 
