@@ -1,3 +1,6 @@
+Version 2.2.0+dev
+- fixed an exception message in ListenerValidator::validate()
+
 Version 2.2.0
 - added option to register services from container as listeners
 - deprecated IEventSubscriber in favor of new EventSubscriber

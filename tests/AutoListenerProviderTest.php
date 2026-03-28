@@ -94,13 +94,13 @@ final class AutoListenerProviderTest extends TestCase
             $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addListener(function (Event $event) {
             });
-        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
+        }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
         $this->assertThrowsException(function () {
             $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addListener(function (Event $event): null {
                 return null;
             });
-        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
+        }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
         $this->assertThrowsException(function () {
             $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addServiceListener("test");
@@ -126,6 +126,6 @@ final class AutoListenerProviderTest extends TestCase
             });
             $listenerProvider = new AutoListenerProvider(container: $container);
             $listenerProvider->addServiceListener("test", "method");
-        }, InvalidListenerException::class, "The callback's return type has to explicitly set to void");
+        }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
     }
 }

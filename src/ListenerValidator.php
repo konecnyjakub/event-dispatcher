@@ -65,7 +65,7 @@ final class ListenerValidator
             !$reflection->getReturnType() instanceof ReflectionNamedType ||
             $reflection->getReturnType()->getName() !== "void"
         ) {
-            throw new InvalidListenerException("The callback's return type has to explicitly set to void");
+            throw new InvalidListenerException("The callback's return type has to be explicitly set to void");
         }
     }
 }
