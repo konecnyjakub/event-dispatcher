@@ -1,3 +1,6 @@
+Version 2.3.0-dev
+- dropped support for PHP 8.3
+
 Version 2.2.1
 - fixed an exception message in ListenerValidator::validate()
 - added exception codes for InvalidListenerException
