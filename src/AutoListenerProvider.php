@@ -17,7 +17,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
     public const int PRIORITY_LOW = -100;
 
     /**
-     * @var array<class-string, array<int, callable[]>>
+     * @var array<int, callable[]>
      */
     private array $listeners = [];
 
@@ -32,10 +32,18 @@ final class AutoListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        $listeners = $this->listeners[$event::class] ?? [];
+        $listeners = $this->listeners;
         krsort($listeners);
         foreach ($listeners as $priority) {
             foreach ($priority as $callback) {
+                /** @var class-string $classname */
+                $classname = (string) $this->listenerValidator->getListenerReflection($callback)
+                    ->getParameters()[0]
+                    ->getType();
+                if (!is_a($event, $classname)) {
+                    continue;
+                }
+
                 yield $callback;
             }
         }
@@ -51,12 +59,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
 
         $metadata = $this->getListenerMetadata($callback);
 
-        /** @var class-string $classname */
-        $classname = (string) $this->listenerValidator->getListenerReflection($callback)
-            ->getParameters()[0]
-            ->getType();
-
-        $this->addListenerInternal($classname, $callback, $metadata);
+        $this->addListenerInternal($callback, $metadata);
     }
 
     /**
@@ -100,7 +103,7 @@ final class AutoListenerProvider implements ListenerProviderInterface
                 if (isset($listener[1]) && $metadata->priority !== $listener[1]) {
                     $metadata = new Listener(priority: $listener[1]);
                 }
-                $this->addListenerInternal($className, $callback, $metadata);
+                $this->addListenerInternal($callback, $metadata);
             }
         }
     }
@@ -138,21 +141,15 @@ final class AutoListenerProvider implements ListenerProviderInterface
         $reflection = $this->listenerValidator->getListenerReflection($callback);
         /** @var class-string $className */
         $className = (string) $reflection->getParameters()[0]->getType();
-        $this->addListenerInternal($className, $callback, $metadata);
+        $this->addListenerInternal($callback, $metadata);
     }
 
-    /**
-     * @param class-string $className
-     */
-    private function addListenerInternal(string $className, callable $callback, Listener $metadata): void
+    private function addListenerInternal(callable $callback, Listener $metadata): void
     {
-        if (!array_key_exists($className, $this->listeners)) {
-            $this->listeners[$className] = [];
+        if (!array_key_exists($metadata->priority, $this->listeners)) {
+            $this->listeners[$metadata->priority] = [];
         }
-        if (!array_key_exists($metadata->priority, $this->listeners[$className])) {
-            $this->listeners[$className][$metadata->priority] = [];
-        }
-        $this->listeners[$className][$metadata->priority][] = $callback;
+        $this->listeners[$metadata->priority][] = $callback;
     }
 
     /**

@@ -1,3 +1,5 @@
 A new version of Event Dispatcher is out. It is for PHP 8.4 or later only.
 
+Events can be now passed to listeners that accept a parent class in AutoListenerProvider.
+
 For complete list of changes since previous version, see CHANGELOG.md.

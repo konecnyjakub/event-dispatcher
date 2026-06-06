@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Konecnyjakub\EventDispatcher;
 
 use Konecnyjakub\Container\SimpleContainer;
+use Konecnyjakub\EventDispatcher\Events\AbstractEvent;
 use Konecnyjakub\EventDispatcher\Events\Event;
 use MyTester\Attributes\TestSuite;
 use MyTester\TestCase;
@@ -17,7 +18,9 @@ final class AutoListenerProviderTest extends TestCase
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new Event())));
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
 
-        $closure = function (Event $event): void {
+        $closure = static function (Event $event): void {
+        };
+        $closureAbstract = static function (AbstractEvent $event): void {
         };
         $invokableListener = new InvokableListener();
         $object = new class
@@ -73,6 +76,20 @@ final class AutoListenerProviderTest extends TestCase
         $this->assertSame(
             [$invokableListener, $closure, ],
             iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
+        );
+        $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
+
+        $listenerProvider = new AutoListenerProvider();
+        $listenerProvider->addListener($closure);
+        $listenerProvider->addListener($closureAbstract);
+        $this->assertSame(
+            [$closure, $closureAbstract, ],
+            iterator_to_array($listenerProvider->getListenersForEvent(new Event()))
+        );
+        $this->assertSame(
+            [$closureAbstract, ],
+            iterator_to_array($listenerProvider->getListenersForEvent(new class extends AbstractEvent {
+            }))
         );
         $this->assertSame([], iterator_to_array($listenerProvider->getListenersForEvent(new \stdClass())));
     }

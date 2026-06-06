@@ -1,5 +1,6 @@
 Version 2.3.0-dev
 - dropped support for PHP 8.3
+- events can be now passed to listeners that accept a parent class in AutoListenerProvider
 
 Version 2.2.1
 - fixed an exception message in ListenerValidator::validate()
