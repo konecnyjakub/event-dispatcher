@@ -1,4 +1,4 @@
-Version 2.3.0+dev
+Version 2.3.1
 - re-added support for PHP 8.3
 
 Version 2.3.0
