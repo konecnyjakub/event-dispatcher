@@ -1,3 +1,6 @@
+Version 2.3.0+dev
+- re-added support for PHP 8.3
+
 Version 2.3.0
 - dropped support for PHP 8.3
 - events can be now passed to listeners that accept a parent class in AutoListenerProvider
