@@ -114,9 +114,7 @@ final class AutoListenerProviderTest extends TestCase
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
         $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();
-            $listenerProvider->addListener(static function (Event $event): null {
-                return null;
-            });
+            $listenerProvider->addListener(static fn (Event $event): null => null);
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
         $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();

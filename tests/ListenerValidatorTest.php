@@ -96,9 +96,7 @@ final class ListenerValidatorTest extends TestCase
             });
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
         $this->assertThrowsException(static function () use ($validator) {
-            $validator->validate(static function (Event $event): null {
-                return null;
-            });
+            $validator->validate(static fn (Event $event): null => null);
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
     }
 }
