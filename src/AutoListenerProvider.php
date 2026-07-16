@@ -71,20 +71,22 @@ final class AutoListenerProvider implements ListenerProviderInterface
     {
         if (is_iterable($callbacks)) {
             foreach ($callbacks as $callback) {
-                if (is_callable($callback)) {
-                    $this->addListener($callback);
+                if (!is_callable($callback)) {
+                    continue;
                 }
+                $this->addListener($callback);
             }
             return;
         }
 
         $reflectionClass = new ReflectionClass($callbacks);
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (count($method->getAttributes(Listener::class)) === 1) {
-                /** @var callable $callback */
-                $callback = [$callbacks, $method->name, ];
-                $this->addListener($callback);
+            if (count($method->getAttributes(Listener::class)) !== 1) {
+                continue;
             }
+            /** @var callable $callback */
+            $callback = [$callbacks, $method->name, ];
+            $this->addListener($callback);
         }
     }
 
