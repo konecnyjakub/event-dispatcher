@@ -96,44 +96,44 @@ final class AutoListenerProviderTest extends TestCase
 
     public function testInvalidCallbacks(): void
     {
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();
-            $listenerProvider->addListener(function (Event $event, int $number) {
+            $listenerProvider->addListener(static function (Event $event, int $number) {
             });
         }, InvalidListenerException::class, "The callback has to accept exactly 1 parameter");
 
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();
-            $listenerProvider->addListener(function (int $number) {
+            $listenerProvider->addListener(static function (int $number) {
             });
         }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();
-            $listenerProvider->addListener(function (Event $event) {
+            $listenerProvider->addListener(static function (Event $event) {
             });
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();
-            $listenerProvider->addListener(function (Event $event): null {
+            $listenerProvider->addListener(static function (Event $event): null {
                 return null;
             });
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $listenerProvider = new AutoListenerProvider();
             $listenerProvider->addServiceListener("test");
         }, ContainerNotSetException::class);
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $container = new SimpleContainer();
             $listenerProvider = new AutoListenerProvider(container: $container);
             $listenerProvider->addServiceListener("test");
         }, InvalidListenerException::class, "The container does not have service 'test'");
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $container = new SimpleContainer();
             $container->set("test", "abc");
             $listenerProvider = new AutoListenerProvider(container: $container);
             $listenerProvider->addServiceListener("test");
         }, InvalidListenerException::class, "Service 'test' is not an object");
-        $this->assertThrowsException(function () {
+        $this->assertThrowsException(static function () {
             $container = new SimpleContainer();
             $container->set("test", new class {
                 public function method(Event $event): string

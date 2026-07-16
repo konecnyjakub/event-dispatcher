@@ -17,7 +17,7 @@ final class EventDispatcherTest extends TestCase
         $event = new Event();
         $var = 0;
         $listenerProvider = new AutoListenerProvider();
-        $listenerProvider->addListener(function (Event $event) use (&$var): void {
+        $listenerProvider->addListener(static function (Event $event) use (&$var): void {
             $var++;
         });
         $eventDispatcher = new EventDispatcher($listenerProvider);
@@ -27,10 +27,10 @@ final class EventDispatcherTest extends TestCase
         $event = new Event();
         $var = 0;
         $listenerProvider = new AutoListenerProvider();
-        $listenerProvider->addListener(function (Event $event) use (&$var): void {
+        $listenerProvider->addListener(static function (Event $event) use (&$var): void {
             $var++;
         });
-        $listenerProvider->addListener(function (AbstractEvent $event) use (&$var): void {
+        $listenerProvider->addListener(static function (AbstractEvent $event) use (&$var): void {
             $var += 2;
         });
         $eventDispatcher = new EventDispatcher($listenerProvider);
@@ -40,11 +40,11 @@ final class EventDispatcherTest extends TestCase
         $event = new TestStoppableEvent();
         $var = 0;
         $listenerProvider = new AutoListenerProvider();
-        $listenerProvider->addListener(function (TestStoppableEvent $event) use (&$var): void {
+        $listenerProvider->addListener(static function (TestStoppableEvent $event) use (&$var): void {
             $var++;
             $event->stopPropagation();
         });
-        $listenerProvider->addListener(function (TestStoppableEvent $event) use (&$var): void {
+        $listenerProvider->addListener(static function (TestStoppableEvent $event) use (&$var): void {
             $var++;
         });
         $eventDispatcher = new EventDispatcher($listenerProvider);

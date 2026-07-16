@@ -17,7 +17,7 @@ final class ListenerValidatorTest extends TestCase
     public function testGetListenerReflection(): void
     {
         $validator = new ListenerValidator();
-        $closure = function (Event $event) {
+        $closure = static function (Event $event) {
         };
         $invokableListener = new InvokableListener();
         $object = new class
@@ -36,7 +36,7 @@ final class ListenerValidatorTest extends TestCase
     public function testGetListenerMetadataReflection(): void
     {
         $validator = new ListenerValidator();
-        $closure = function (Event $event) {
+        $closure = static function (Event $event) {
         };
         $invokableListener = new InvokableListener();
         $object = new class
@@ -55,21 +55,21 @@ final class ListenerValidatorTest extends TestCase
     public function testValidate(): void
     {
         $validator = new ListenerValidator();
-        $this->assertNoException(function () use ($validator) {
-            $closure = function (Event $event): void {
+        $this->assertNoException(static function () use ($validator) {
+            $closure = static function (Event $event): void {
             };
             $validator->validate($closure);
         });
-        $this->assertNoException(function () use ($validator) {
-            $closure = function (Event $event): void {
+        $this->assertNoException(static function () use ($validator) {
+            $closure = static function (Event $event): void {
             };
             $validator->validate($closure, Event::class);
         });
-        $this->assertNoException(function () use ($validator) {
+        $this->assertNoException(static function () use ($validator) {
             $invokableListener = new InvokableListener();
             $validator->validate($invokableListener);
         });
-        $this->assertNoException(function () use ($validator) {
+        $this->assertNoException(static function () use ($validator) {
             $object = new class
             {
                 public function listener(Event $event): void
@@ -79,24 +79,24 @@ final class ListenerValidatorTest extends TestCase
             $arrayListener = [$object, "listener", ];
             $validator->validate($arrayListener);
         });
-        $this->assertThrowsException(function () use ($validator) {
-            $validator->validate(function (Event $event, int $number) {
+        $this->assertThrowsException(static function () use ($validator) {
+            $validator->validate(static function (Event $event, int $number) {
             });
         }, InvalidListenerException::class, "The callback has to accept exactly 1 parameter");
-        $this->assertThrowsException(function () use ($validator) {
-            $validator->validate(function (int $number) {
+        $this->assertThrowsException(static function () use ($validator) {
+            $validator->validate(static function (int $number) {
             });
         }, InvalidListenerException::class, "The callback's first parameter has to be a class name");
-        $this->assertThrowsException(function () use ($validator) {
-            $validator->validate(function (TestStoppableEvent $event) {
+        $this->assertThrowsException(static function () use ($validator) {
+            $validator->validate(static function (TestStoppableEvent $event) {
             }, Event::class);
         }, InvalidListenerException::class, "The callback's first parameter has to be " . Event::class);
-        $this->assertThrowsException(function () use ($validator) {
-            $validator->validate(function (Event $event) {
+        $this->assertThrowsException(static function () use ($validator) {
+            $validator->validate(static function (Event $event) {
             });
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");
-        $this->assertThrowsException(function () use ($validator) {
-            $validator->validate(function (Event $event): null {
+        $this->assertThrowsException(static function () use ($validator) {
+            $validator->validate(static function (Event $event): null {
                 return null;
             });
         }, InvalidListenerException::class, "The callback's return type has to be explicitly set to void");

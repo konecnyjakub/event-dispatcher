@@ -16,7 +16,7 @@ final class DebugEventDispatcherTest extends TestCase
         $event = new Event();
         $var = 0;
         $listenerProvider = new AutoListenerProvider();
-        $listenerProvider->addListener(function (Event $event) use (&$var): void {
+        $listenerProvider->addListener(static function (Event $event) use (&$var): void {
             $var++;
         });
         $logger = new TestLogger();
